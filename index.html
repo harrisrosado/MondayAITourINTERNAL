@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Monday AI Tour — The AI Uplevel Series</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #000000;
+    --surface: #0D0D1A;
+    --card: #141428;
+    --border: rgba(255,255,255,0.06);
+    --border-hover: rgba(97,97,255,0.3);
+    --text: #ffffff;
+    --muted: #A9AEBE;
+    --purple: #6161FF;
+    --green: #00CA72;
+    --red: #FB275D;
+    --yellow: #FFCC00;
+    --blue: #579BFC;
+    --pink: #FF5AC4;
+    --violet: #9D50DD;
+    --orange: #FDAB3D;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Figtree', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+
+  /* ── Sticky Side Nav ── */
+  .side-nav {
+    position: fixed;
+    right: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-end;
+  }
+  .side-nav a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: all 0.3s;
+  }
+  .side-nav a .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    transition: all 0.3s;
+    flex-shrink: 0;
+  }
+  .side-nav a .label {
+    opacity: 0;
+    transform: translateX(8px);
+    transition: all 0.3s;
+    white-space: nowrap;
+  }
+  .side-nav a:hover .label,
+  .side-nav a.active .label { opacity: 1; transform: translateX(0); }
+  .side-nav a.active .dot { background: var(--purple); transform: scale(1.6); }
+  .side-nav a:hover .dot { background: rgba(97,97,255,0.5); }
+
+  /* ── Top bar ── */
+  .top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 16px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    transition: all 0.4s;
+  }
+  .top-bar.scrolled { background: rgba(0,0,0,0.92); }
+  .top-bar .brand {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--muted);
+  }
+  .top-bar .brand span { color: var(--purple); }
+
+  /* ── Progress bar ── */
+  .progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--purple), var(--green));
+    z-index: 300;
+    width: 0%;
+    transition: width 0.1s linear;
+  }
+
+  /* ── Section wrapper ── */
+  .section {
+    min-height: 100vh;
+    padding: 160px 80px 120px;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .section.hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
+  }
+  .section.full-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  /* ── Fade-in on scroll ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal.delay-1 { transition-delay: 0.1s; }
+  .reveal.delay-2 { transition-delay: 0.2s; }
+  .reveal.delay-3 { transition-delay: 0.3s; }
+  .reveal.delay-4 { transition-delay: 0.4s; }
+
+  /* ── Divider ── */
+  .section-divider {
+    width: 120px;
+    height: 3px;
+    border-radius: 2px;
+    margin: 0 auto 60px;
+    background: linear-gradient(90deg, var(--purple), var(--green));
+  }
+
+  /* ── Part label ── */
+  .part-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 16px;
+  }
+
+  /* ── Gradient heading ── */
+  .gradient-text {
+    background: linear-gradient(135deg, #6161FF, #00CA72);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Card ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    transition: all 0.3s;
+  }
+  .card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+
+  /* ── Pill ── */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  /* ── Grid layouts ── */
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+
+  /* ── Block card ── */
+  .block-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 22px;
+    transition: all 0.3s;
+  }
+  .block-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+
+  /* ── Signal row ── */
+  .signal-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 24px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: all 0.3s;
+  }
+  .signal-row:hover { border-color: var(--border-hover); }
+
+  /* ── Scenario card ── */
+  .scenario-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    transition: all 0.3s;
+  }
+  .scenario-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+
+  /* ── Callout ── */
+  .callout {
+    padding: 20px 28px;
+    border-radius: 14px;
+    border: 1px solid;
+  }
+
+  /* ── Flow step ── */
+  .flow { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .flow-step { padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 600; }
+  .flow-arrow { font-size: 20px; color: var(--muted); }
+
+  /* ── Comparison split ── */
+  .comparison { display: flex; gap: 28px; align-items: stretch; }
+  .comparison > div { flex: 1; }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .section { padding: 120px 28px 80px; }
+    .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+    .comparison { flex-direction: column; }
+    .side-nav { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Top bar -->
+<div class="top-bar" id="topBar">
+  <div class="brand">The AI Uplevel Series <span>· Session 4</span></div>
+  <div style="display:flex; gap:10px;">
+    <span class="pill" style="background:rgba(97,97,255,0.12); color:var(--purple); font-size:11px;">AI Blocks</span>
+    <span class="pill" style="background:rgba(0,202,114,0.12); color:var(--green); font-size:11px;">Workflows</span>
+    <span class="pill" style="background:rgba(87,155,252,0.12); color:var(--blue); font-size:11px;">Sidekick</span>
+    <span class="pill" style="background:rgba(255,204,0,0.12); color:var(--yellow); font-size:11px;">Notetaker</span>
+    <span class="pill" style="background:rgba(251,39,93,0.12); color:var(--red); font-size:11px;">Agents</span>
+    <span class="pill" style="background:rgba(157,80,221,0.12); color:var(--violet); font-size:11px;">Vibe</span>
+  </div>
+</div>
+
+<!-- Side nav -->
+<nav class="side-nav" id="sideNav">
+  <a href="#hero" data-section="hero"><span class="label">Top</span><span class="dot"></span></a>
+  <a href="#differentiators" data-section="differentiators"><span class="label">Differentiators</span><span class="dot"></span></a>
+  <a href="#pillars" data-section="pillars"><span class="label">3 Pillars</span><span class="dot"></span></a>
+  <a href="#blocks" data-section="blocks"><span class="label">AI Blocks</span><span class="dot"></span></a>
+  <a href="#workflows" data-section="workflows"><span class="label">Workflows</span><span class="dot"></span></a>
+  <a href="#sidekick" data-section="sidekick"><span class="label">Sidekick</span><span class="dot"></span></a>
+  <a href="#notetaker" data-section="notetaker"><span class="label">Notetaker</span><span class="dot"></span></a>
+  <a href="#agents" data-section="agents"><span class="label">Agents</span><span class="dot"></span></a>
+  <a href="#vibe" data-section="vibe"><span class="label">Vibe</span><span class="dot"></span></a>
+  <a href="#se-lens" data-section="se-lens"><span class="label">SE Lens</span><span class="dot"></span></a>
+  <a href="#ppdav" data-section="ppdav"><span class="label">PPDAV</span><span class="dot"></span></a>
+  <a href="#scenarios" data-section="scenarios"><span class="label">Scenarios</span><span class="dot"></span></a>
+</nav>
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- HERO                                                        -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="section hero" id="hero">
+  <div class="reveal" style="margin-bottom:20px;">
+    <div class="part-label" style="color:var(--purple);">The AI Uplevel Series · Session 4</div>
+  </div>
+  <h1 class="reveal delay-1" style="font-size:72px; font-weight:800; line-height:1.05; margin-bottom:24px;">
+    The Monday <span class="gradient-text">AI Tour</span>
+  </h1>
+  <p class="reveal delay-2" style="font-size:22px; color:var(--muted); max-width:650px; margin-bottom:40px;">
+    Know the products. Read the signals. Build the Vibe.
+  </p>
+  <div class="reveal delay-3" style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
+    <span class="pill" style="background:rgba(97,97,255,0.15); color:var(--purple);">AI Blocks</span>
+    <span class="pill" style="background:rgba(0,202,114,0.15); color:var(--green);">Workflows</span>
+    <span class="pill" style="background:rgba(87,155,252,0.15); color:var(--blue);">Sidekick</span>
+    <span class="pill" style="background:rgba(255,204,0,0.15); color:var(--yellow);">Notetaker</span>
+    <span class="pill" style="background:rgba(251,39,93,0.15); color:var(--red);">Agents</span>
+    <span class="pill" style="background:rgba(157,80,221,0.15); color:var(--violet);">Vibe</span>
+  </div>
+  <div class="reveal delay-4" style="margin-top:60px; font-size:13px; color:rgba(255,255,255,0.3);">Scroll to explore ↓</div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- AGENDA                                                      -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="section" style="min-height:auto; padding-top:80px;">
+  <div class="section-divider reveal"></div>
+  <div style="max-width:800px; margin:0 auto;">
+    <h2 class="reveal" style="font-size:13px; font-weight:600; color:var(--purple); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">Today's agenda</h2>
+    <h1 class="reveal" style="font-size:44px; font-weight:700; margin-bottom:40px;">60 minutes</h1>
+    <div style="display:flex; flex-direction:column; gap:20px;">
+      <div class="reveal" style="display:flex; align-items:center; gap:20px;">
+        <div style="width:52px; height:52px; border-radius:14px; background:rgba(97,97,255,0.12); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; color:var(--purple); flex-shrink:0;">1</div>
+        <div><div style="font-size:20px; font-weight:600;">Why monday AI is different</div><div style="font-size:14px; color:var(--muted); margin-top:2px;">Competitive differentiators & the 3 pillars of monday AI</div></div>
+        <div style="margin-left:auto; font-size:14px; color:var(--muted);">5 min</div>
+      </div>
+      <div class="reveal delay-1" style="display:flex; align-items:center; gap:20px;">
+        <div style="width:52px; height:52px; border-radius:14px; background:rgba(0,202,114,0.12); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; color:var(--green); flex-shrink:0;">2</div>
+        <div><div style="font-size:20px; font-weight:600;">The product tour</div><div style="font-size:14px; color:var(--muted); margin-top:2px;">Blocks, Workflows, Sidekick, Notetaker, Agents — what each does and when to show it</div></div>
+        <div style="margin-left:auto; font-size:14px; color:var(--muted);">15 min</div>
+      </div>
+      <div class="reveal delay-2" style="display:flex; align-items:center; gap:20px;">
+        <div style="width:52px; height:52px; border-radius:14px; background:rgba(255,204,0,0.12); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; color:var(--yellow); flex-shrink:0;">3</div>
+        <div><div style="font-size:20px; font-weight:600;">The SE lens</div><div style="font-size:14px; color:var(--muted); margin-top:2px;">What to listen for & which AI to prescribe</div></div>
+        <div style="margin-left:auto; font-size:14px; color:var(--muted);">5 min</div>
+      </div>
+      <div class="reveal delay-3" style="display:flex; align-items:center; gap:20px;">
+        <div style="width:52px; height:52px; border-radius:14px; background:rgba(157,80,221,0.12); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; color:var(--violet); flex-shrink:0;">4</div>
+        <div><div style="font-size:20px; font-weight:600;">monday Vibe + Translating pain</div><div style="font-size:14px; color:var(--muted); margin-top:2px;">Deep dive on Vibe, PPDAV framework, turning customer pain into killer apps</div></div>
+        <div style="margin-left:auto; font-size:14px; color:var(--muted);">11 min</div>
+      </div>
+      <div class="reveal delay-4" style="display:flex; align-items:center; gap:20px;">
+        <div style="width:52px; height:52px; border-radius:14px; background:rgba(251,39,93,0.12); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; color:var(--red); flex-shrink:0;">5</div>
+        <div><div style="font-size:20px; font-weight:600;">Vibe Coding Party + Show & Tell</div><div style="font-size:14px; color:var(--muted); margin-top:2px;">Pick a client, build a Vibe, compete for glory</div></div>
+        <div style="margin-left:auto; font-size:14px; color:var(--muted);">24 min</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- PART 1: DIFFERENTIATORS                                     -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="section full-center" id="differentiators" style="min-height:60vh;">
+  <div class="part-label reveal" style="color:var(--purple);">Part 1</div>
+  <h1 class="reveal delay-1" style="font-size:56px; font-weight:800;">Why monday AI is <span class="gradient-text">different</span></h1>
+</section>
+
+<section class="section" style="min-height:auto; padding-top:40px;">
+  <div style="max-width:950px; margin:0 auto;">
+    <h2 class="reveal" style="font-size:13px; font-weight:600; color:var(--purple); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">The key message</h2>
+    <h1 class="reveal" style="font-size:40px; font-weight:700; margin-bottom:16px;">AI that <em>works</em>, not AI that <em>talks</em></h1>
+    <p class="reveal" style="font-size:17px; color:var(--muted); margin-bottom:36px;">Every competitor bolted a chatbot onto their platform and called it AI. monday built AI into the fabric of how work actually gets done.</p>
+    <div class="grid-2 reveal">
+      <div class="card" style="text-align:center; box-shadow: 0 0 40px rgba(97,97,255,0.1);">
+        <div style="font-size:36px; margin-bottom:12px;">🤖</div>
+        <div style="font-size:18px; font-weight:700; margin-bottom:8px;">Everyone else</div>
+        <div style="font-size:14px; color:var(--muted);">"Ask the chatbot a question"<br>Passive. Siloed. No action.</div>
+      </div>
+      <div class="card" style="text-align:center; border-color:rgba(0,202,114,0.3);">
+        <div style="font-size:36px; margin-bottom:12px;">⚡</div>
+        <div style="font-size:18px; font-weight:700; color:var(--green); margin-bottom:8px;">monday.com</div>
+        <div style="font-size:14px; color:var(--muted);">AI embedded in columns, automations, workflows, and apps.<br><strong style="color:#fff;">It doesn't just answer — it acts.</strong></div>
+      </div>
+    </div>
+    <div class="reveal delay-1" style="margin-top:28px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+      <span class="pill" style="background:rgba(0,202,114,0.12); color:var(--green);">🔒 Data never trains models</span>
+      <span class="pill" style="background:rgba(97,97,255,0.12); color:var(--purple);">👥 Admin controls per role</span>
+      <span class="pill" style="background:rgba(255,204,0,0.12); color:var(--yellow);">💰 Predictable credit pricing</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- THREE PILLARS                                               -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="section" id="pillars">
+  <div style="max-width:1050px; margin:0 auto;">
+    <h2 class="reveal" style="font-size:13px; font-weight:600; color:var(--purple); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">The AI platform</h2>
+    <h1 class="reveal" style="font-size:38px; font-weight:700; margin-bottom:12px;">Three pillars of monday AI</h1>
+    <p class="reveal" style="font-size:16px; color:var(--muted); margin-bottom:40px;">Every AI capability maps to one of three intuitive categories. Together, they cover the full lifecycle of how teams get work done.</p>
+    <div class="grid-3">
+      <div class="card reveal" style="border-top:3px solid var(--green);">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+          <div style="width:40px; height:40px; border-radius:10px; background:rgba(0,202,114,0.12); display:flex; align-items:center; justify-content:center; font-size:20px;">🔬</div>
+          <div style="font-size:22px; font-weight:700;">Understand</div>
+        </div>
+        <div style="font-size:14px; color:var(--muted);">AI that surfaces context, answers questions, and captures knowledge so your team always has the full picture.</div>
+        <div style="display:flex; gap:8px; margin-top:16px;">
+          <span class="pill" style="font-size:12px; background:rgba(0,202,114,0.1); color:var(--green); border:1px solid rgba(0,202,114,0.25);">Sidekick</span>
+          <span class="pill" style="font-size:12px; background:rgba(0,202,114,0.1); color:var(--green); border:1px solid rgba(0,202,114,0.25);">Notetaker</span>
+        </div>
+      </div>
+      <div class="card reveal delay-1" style="border-top:3px solid var(--purple);">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+          <div style="width:40px; height:40px; border-radius:10px; background:rgba(97,97,255,0.12); display:flex; align-items:center; justify-content:center; font-size:20px;">⚙️</div>
+          <div style="font-size:22px; font-weight:700;">Create</div>
+        </div>
+        <div style="font-size:14px; color:var(--muted);">AI that helps you build boards, generate content, write formulas, and compose visuals — right where you're already working.</div>
+        <div style="display:flex; gap:8px; margin-top:16px;">
+          <span class="pill" style="font-size:12px; background:rgba(97,97,255,0.1); color:var(--purple); border:1px solid rgba(97,97,255,0.25);">AI Blocks</span>
+          <span class="pill" style="font-size:12px; background:rgba(97,97,255,0.1); color:var(--purple); border:1px solid rgba(97,97,255,0.25);">Vibe</span>
+        </div>
+      </div>
+      <div class="card reveal delay-2" style="border-top:3px solid var(--blue);">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+          <div style="width:40px; height:40px; border-radius:10px; background:rgba(87,155,252,0.12); display:flex; align-items:center; justify-content:center; font-size:20px;">⚡</div>
+          <div style="font-size:22px; font-weight:700;">Automate</div>
+        </div>
+        <div style="font-size:14px; color:var(--muted);">AI that takes action on your behalf — running workflows, managing processes, and handling tasks so people can focus on decisions.</div>
+        <div style="display:flex; gap:8px; margin-top:16px;">
+          <span class="pill" style="font-size:12px; background:rgba(87,155,252,0.1); color:var(--blue); border:1px solid rgba(87,155,252,0.25);">AI Workflows</span>
+          <span class="pill" style="font-size:12px; background:rgba(87,155,252,0.1); color:var(--blue); border:1px solid rgba(87,155,252,0.25);">AI Agents</span>
+        </div>
+      </div>
+    </div>
+    <div class="reveal delay-3" style="text-align:center; margin-top:28px; font-size:14px; color:var(--muted);">
+      <em>"Software that manages work → Software that <strong style="color:#fff;">does</strong> work"</em>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- PART 2: PRODUCT TOUR                                        -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="section full-center" style="min-height:50vh;">
+  <div class="section-divider reveal"></div>
+  <div class="part-label reveal" style="color:var(--green);">Part 2</div>
+  <h1 class="reveal delay-1" style="font-size:56px; font-weight:800;">The product <span class="gradient-text">tour</span></h1>
+  <p class="reveal delay-2" style="font-size:20px; color:var(--muted); margin-top:20px;">What each AI product does and when to show it</p>
+</section>
+
+
+<!-- AI BLOCKS -->
+<section class="section" id="blocks">
+  <div style="max-width:1000px; margin:0 auto;">
+    <h2 class="reveal" style="font-size:13px; font-weight:600; color:var(--purple); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">Create pillar</h2>
+    <h1 class="reveal" style="font-size:38px; font-weight:700; margin-bottom:28px;">AI Blocks</h1>
+    <p class="reveal" style="font-size:16px; color:var(--muted); margin-bottom:28px;">Pre-built AI functions you plug into columns, automations, and workflows. Seven block types cover 90% of use cases.</p>
+    <div class="grid-4">
+      <div class="block-card reveal" style="border-left:3px solid var(--purple);"><div style="font-size:15px; font-weight:700;">Extract Info</div><div style="font-size:12px; color:var(--muted); margin-top:6px;">Pull data from PDFs, text, images. Invoice parsing, resume screening.</div></div>
+      <div class="block-card reveal delay-1" style="border-left:3px solid var(--green);"><div style="font-size:15px; font-weight:700;">Categorize</div><div style="font-size:12px; color:var(--muted); margin-top:6px;">Classify at scale. Ticket triage, lead scoring, content tagging.</div></div>
+      <div class="block-card reveal delay-2" style="border-left:3px solid var(--yellow);"><div style="font-size:15px; font-weight:700;">Detect Sentiment</div><div style="font-size:12px; color:var(--muted); margin-top:6px;">Positive/negative/neutral. NPS routing, feedback analysis.</div></div>
+      <div class="block-card reveal delay-3" style="border-left:3px solid var(--red);"><div style="font-size:15px; font-weight:700;">Summarize</div><div style="font-size:12px; color:var(--muted); margin-top:6px;">Condense updates into key points. Exec briefings, status rollups.</div></div>
+      <div class="block-card reveal" style="border-left:3px solid var(--violet);"><div style="font-size:15px; font-weight:700;">Translate</div><div style="font-size:12px; color:var(--muted); margin-top:6px;">Accurate translation and localization for global teams.</div></div>
+      <div class="block-card reveal delay-1" style="border-left:3px solid var(--blue);"><div style="font-size:15px; font-weight:700;">Generate Docs</div><div style="font-size:12px; color:var(--muted); margin-top:6px;">Create documents from board data. Briefs, posts, reports.</div></div>
+      <div class="block-card reveal delay-2" style="border-left:3px solid var(--pink);"><div style="font-size:15px; font-weight:700;">Custom Prompt</div><div style="font-size:12px; color:var(--muted); margin-top:6px;">Write any prompt. The wildcard for anything the other 6 don't cover.</div></div>
+      <div class="block-card reveal delay-3" style="border-left:3px solid var(--green); border-style:dashed;"><div style="font-size:15px; font-weight:700; color:var(--green);">SE tip</div><div style="font-size:12px; color:var(--muted); margin-top:6px;">Show "AI Board Suggestions" — monday recommends blocks + estimated hours saved.</div></div>
+    </div>
+
+    <!-- Where they live -->
+    <div style="margin-top:60px;">
+      <h2 class="reveal" style="font-size:28px; font-weight:700; margin-bottom:28px;">Where they live</h2>
+      <div style="display:flex; flex-direction:column; gap:20px;">
+        <div class="reveal" style="display:flex; align-items:start; gap:24px;">
+          <div style="width:56px; height:56px; border-radius:14px; background:rgba(97,97,255,0.12); display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0;">📌</div>
+          <div><div style="font-size:20px; font-weight:700;">AI-Powered Columns</div><div style="font-size:15px; color:var(--muted); margin-top:6px;">Add via Column Center > AI-powered tab. Processes data per-item automatically. Auto-updates when new items are created. This is where most demos start.</div></div>
+        </div>
+        <div class="reveal delay-1" style="display:flex; align-items:start; gap:24px;">
+          <div style="width:56px; height:56px; border-radius:14px; background:rgba(0,202,114,0.12); display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0;">⚡</div>
+          <div><div style="font-size:20px; font-weight:700;">AI-Powered Automations</div><div style="font-size:15px; color:var(--muted); margin-top:6px;">Trigger AI actions on status changes, date arrivals, item creation. "When status changes to Review → AI summarizes all updates → notifies approver."</div></div>
+        </div>
+        <div class="reveal delay-2" style="display:flex; align-items:start; gap:24px;">
+          <div style="width:56px; height:56px; border-radius:14px; background:rgba(157,80,221,0.12); display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0;">🔄</div>
+          <div><div style="font-size:20px; font-weight:700;">Workflow Builder</div><div style="font-size:15px; color:var(--muted); margin-top:6px;">Chain multiple AI blocks with conditional logic, delays, cross-board actions. This is the power move — multi-step AI pipelines without code.</div></div>
+        </div>
+      </div>
+      <div class="reveal delay-3 callout" style="margin-top:28px; background:rgba(251,39,93,0.06); border-color:rgba(251,39,93,0.2);">
+        <div style="font-size:14px; color:var(--red); font-weight:600;">💡 monday service gets unlimited AI blocks on the 4 service entity boards</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- AI WORKFLOWS -->
+<section class="section" id="workflows">
+  <div style="max-width:950px; margin:0 auto;">
+    <h2 class="reveal" style="font-size:13px; font-weight:600; color:var(--green); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">Automate pillar</h2>
+    <h1 class="reveal" style="font-size:38px; font-weight:700; margin-bottom:16px;">AI Workflows</h1>
+    <p class="reveal" style="font-size:16px; color:var(--muted); margin-bottom:32px;">The Workflow Builder is where AI Blocks become intelligent pipelines. Chain them, branch them, connect them across boards.</p>
+
+    <div class="card reveal" style="padding:32px;">
+      <div style="font-size:14px; font-weight:600; color:var(--green); margin-bottom:20px;">Example: Intelligent Ticket Routing</div>
+      <div class="flow">
+        <div class="flow-step" style="background:rgba(97,97,255,0.15);">New ticket arrives</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step" style="background:rgba(0,202,114,0.15);">AI Categorizes issue</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step" style="background:rgba(255,204,0,0.15);">AI Detects Sentiment</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step" style="background:rgba(251,39,93,0.15);">Routes to right team</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step" style="background:rgba(157,80,221,0.15);">AI Drafts response</div>
+      </div>
+      <div style="margin-top:20px; font-size:13px; color:var(--muted); text-align:center;">All automatic. No human in the loop until the drafted response needs review.</div>
+    </div>
+
+    <div class="grid-2 reveal delay-1" style="margin-top:24px;">
+      <div style="padding:16px 20px; background:rgba(97,97,255,0.04); border:1px solid var(--border); border-radius:12px;">
+        <div style="font-size:14px; font-weight:600; color:var(--purple);">💬 Sidekick can build these</div>
+        <div style="font-size:12px; color:var(--muted); margin-top:4px;">"Manage IT support requests, auto-assign by issue type" → done.</div>
+      </div>
+      <div style="padding:16px 20px; background:rgba(0,202,114,0.04); border:1px solid var(--border); border-radius:12px;">
+        <div style="font-size:14px; font-weight:600; color:var(--green);">🎯 Demo angle</div>
+        <div style="font-size:12px; color:var(--muted); margin-top:4px;">Show a multi-step workflow with AI at each node. This is the "oh wow" for ops leaders.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- SIDEKICK -->
+<section class="section" id="sidekick">
+  <div style="max-width:950px; margin:0 auto;">
+    <h2 class="reveal" style="font-size:13px; font-weight:600; color:var(--blue); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">Understand pillar</h2>
+    <h1 class="reveal" style="font-size:38px; font-weight:700; margin-bottom:16px;">monday <span style="color:var(--blue);">Sidekick</span></h1>
+    <p class="reveal" style="font-size:16px; color:var(--muted); margin-bottom:28px;">Context-aware AI assistant embedded in the workspace. Understands your business, your data, your workflows — and takes action.</p>
+
+    <div class="grid-3">
+      <div class="card reveal">
+        <div style="font-size:28px; margin-bottom:10px;">💬</div>
+        <div style="font-size:16px; font-weight:700; margin-bottom:6px;">Conversational AI</div>
+        <div style="font-size:13px; color:var(--muted);">Ask questions, generate content, summarize updates, get suggestions — all in natural language within monday.</div>
+      </div>
+      <div class="card reveal delay-1">
+        <div style="font-size:28px; margin-bottom:10px;">⚡</div>
+        <div style="font-size:16px; font-weight:700; margin-bottom:6px;">Builds workflows</div>
+        <div style="font-size:13px; color:var(--muted);">"Manage IT requests, auto-assign by type" → generates a full workflow. The wow moment for non-technical stakeholders.</div>
+      </div>
+      <div class="card reveal delay-2">
+        <div style="font-size:28px; margin-bottom:10px;">🔒</div>
+        <div style="font-size:16px; font-weight:700; margin-bottom:6px;">Full context</div>
+        <div style="font-size:13px; color:var(--muted);">Knows your boards, your items, your team. Answers with actual data, not generic responses. Lite on Standard+, Plus on Enterprise.</div>
+      </div>
+    </div>
+
+    <div class="card reveal delay-3" style="margin-top:28px; border-color:rgba(87,155,252,0.25);">
+      <div style="font-size:15px; font-weight:700; color:var(--blue); margin-bottom:14px;">🚨 SE Positioning: Sidekick vs. MCP (Claude / Copilot)</div>
+      <div class="grid-2" style="gap:28px;">
+        <div>
+          <div style="font-size:13px; font-weight:600; color:var(--green); margin-bottom:8px;">Sidekick (position this)</div>
+          <div style="font-size:13px; color:var(--muted); line-height:1.7;">
+            • Lives <em>inside</em> monday — sees boards, items, people<br>
+            • Takes actions: creates items, updates statuses, builds workflows<br>
+            • Uses monday AI credits (predictable, admin-controlled)<br>
+            • Zero setup on Standard+ plans — works instantly in-platform
+          </div>
+        </div>
+        <div>
+          <div style="font-size:13px; font-weight:600; color:var(--yellow); margin-bottom:8px;">MCP to Claude / Copilot (be careful)</div>
+          <div style="font-size:13px; color:var(--muted); line-height:1.7;">
+            • Lives <em>outside</em> monday — reads data via API connector<br>
+            • Can query but can't natively act inside monday<br>
+            • Uses customer's own LLM license (bypasses monday credits)<br>
+            • Great for power users, but <strong style="color:var(--red);">cannibalizes Sidekick adoption</strong>
+          </div>
+        </div>
+      </div>
+      <div class="callout" style="margin-top:16px; background:rgba(251,39,93,0.06); border-color:rgba(251,39,93,0.15); font-size:13px; color:var(--muted);">
+        <strong style="color:#fff;">The talk track:</strong> "MCP is great for devs who live in their IDE. But for the 90% of your org that works in monday every day, Sidekick is the answer — no setup, full context, takes action. Don't let the tail wag the dog."
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- NOTETAKER -->
+<section class="section" id="notetaker">
+  <div style="max-width:900px; margin:0 auto;">
+    <h2 class="reveal" style="font-size:13px; font-weight:600; color:var(--yellow); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">Understand pillar</h2>
+    <h1 class="reveal" style="font-size:38px; font-weight:700; margin-bottom:16px;">monday Notetaker</h1>
+    <p class="reveal" style="font-size:16px; color:var(--muted); margin-bottom:32px;">AI-powered meeting intelligence that turns conversations into actions — connected directly to your boards and workflows.</p>
+    <div class="grid-3">
+      <div class="card reveal">
+        <div style="font-size:28px; margin-bottom:12px;">🎤</div>
+        <div style="font-size:18px; font-weight:700; margin-bottom:8px;">Auto-transcribe</div>
+        <div style="font-size:14px; color:var(--muted);">Joins calls, records, and transcribes. Supports Zoom, Teams, Google Meet.</div>
+      </div>
+      <div class="card reveal delay-1">
+        <div style="font-size:28px; margin-bottom:12px;">📋</div>
+        <div style="font-size:18px; font-weight:700; margin-bottom:8px;">Smart summaries</div>
+        <div style="font-size:14px; color:var(--muted);">AI extracts key decisions, action items, and follow-ups. No more "what did we agree on?"</div>
+      </div>
+      <div class="card reveal delay-2">
+        <div style="font-size:28px; margin-bottom:12px;">🔗</div>
+        <div style="font-size:18px; font-weight:700; margin-bottom:8px;">Connected to boards</div>
+        <div style="font-size:14px; color:var(--muted);">Action items push directly to monday boards as tasks. Meeting → work item in one click.</div>
+      </div>
+    </div>
+    <div class="reveal delay-3 callout" style="margin-top:28px; background:rgba(0,202,114,0.04); border-color:rgba(0,202,114,0.15);">
+      <div style="font-size:14px;"><strong style="color:var(--green);">SE tip:</strong> <span style="color:var(--muted);">Great for any customer who says "meetings are where our action items go to die." That's your cue.</span></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- AGENTS -->
+<section class="section" id="agents">
+  <div style="max-width:950px; margin:0 auto;">
+    <h2 class="reveal" style="font-size:13px; font-weight:600; color:var(--red); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">Automate pillar · Preview</h2>
+    <h1 class="reveal" style="font-size:38px; font-weight:700; margin-bottom:16px;">Agents & Digital Workers</h1>
+    <p class="reveal" style="font-size:16px; color:var(--muted); margin-bottom:24px;">Autonomous AI that executes work end-to-end. We'll go deep next week at the agentic launch — here's the teaser.</p>
+    <div class="grid-3">
+      <div class="block-card reveal"><div style="font-size:14px; font-weight:700; color:var(--red);">Project Analyzer</div><div style="font-size:12px; color:var(--muted); margin-top:4px;">Monitors hundreds of projects, flags bottlenecks proactively.</div></div>
+      <div class="block-card reveal delay-1"><div style="font-size:14px; font-weight:700; color:var(--red);">Sales Coach</div><div style="font-size:12px; color:var(--muted); margin-top:4px;">Identifies rep skill gaps, delivers performance insights.</div></div>
+      <div class="block-card reveal delay-2"><div style="font-size:14px; font-weight:700; color:var(--red);">Chris (AI SDR)</div><div style="font-size:12px; color:var(--muted); margin-top:4px;">Engages and qualifies leads in real-time. CRM product.</div></div>
+      <div class="block-card reveal"><div style="font-size:14px; font-weight:700; color:var(--red);">AI Service Agent</div><div style="font-size:12px; color:var(--muted); margin-top:4px;">Proactive service resolution, monitors tickets.</div></div>
+      <div class="block-card reveal delay-1"><div style="font-size:14px; font-weight:700; color:var(--red);">Web Researcher</div><div style="font-size:12px; color:var(--muted); margin-top:4px;">Web intelligence for research and decision acceleration.</div></div>
+      <div class="block-card reveal delay-2"><div style="font-size:14px; font-weight:700; color:var(--red);">Agent Factory</div><div style="font-size:12px; color:var(--muted); margin-top:4px;">No-code builder for custom agents. The platform play.</div></div>
+    </div>
+    <div class="reveal delay-3 callout" style="margin-top:24px; text-align:center; background:rgba(251,39,93,0.06); border-color:rgba(251,39,93,0.2);">
+      <div style="font-size:16px; font-weight:600; color:var(--red);">🚀 Agentic deep dive is next week — stay tuned</div>
+      <div style="font-size:13px; color:var(--muted); margin-top:4px;">For now, know these exist and know the names. You'll be dangerous with them soon.</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- VIBE DEEP DIVE                                              -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="section" id="vibe">
+  <div style="max-width:950px; margin:0 auto;">
+    <h2 class="reveal" style="font-size:13px; font-weight:600; color:var(--violet); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">Create pillar · Deep Dive</h2>
+    <h1 class="reveal" style="font-size:42px; font-weight:700; margin-bottom:16px;">monday <span style="color:var(--violet);">Vibe</span></h1>
+    <p class="reveal" style="font-size:18px; color:var(--muted); margin-bottom:36px;">Describe what you need → get a fully functional custom monday app. No code. No dev team. No waiting.</p>
+
+    <div class="grid-3 reveal">
+      <div class="card" style="text-align:center; box-shadow: 0 0 30px rgba(157,80,221,0.1);">
+        <div style="font-size:40px; font-weight:800; color:var(--violet);">17,000+</div>
+        <div style="font-size:14px; color:var(--muted); margin-top:4px;">apps built in week one</div>
+      </div>
+      <div class="card" style="text-align:center; box-shadow: 0 0 30px rgba(0,202,114,0.1);">
+        <div style="font-size:40px; font-weight:800; color:var(--green);">$0</div>
+        <div style="font-size:14px; color:var(--muted); margin-top:4px;">to build & test — paid add-on to publish</div>
+      </div>
+      <div class="card" style="text-align:center; box-shadow: 0 0 30px rgba(97,97,255,0.1);">
+        <div style="font-size:40px; font-weight:800; color:var(--purple);">Add-on</div>
+        <div style="font-size:14px; color:var(--muted); margin-top:4px;">available across all plans with AI enabled</div>
+      </div>
+    </div>
+
+    <!-- Why Vibe is different -->
+    <div style="margin-top:60px;">
+      <h2 class="reveal" style="font-size:28px; font-weight:700; margin-bottom:28px;">Why Vibe isn't "just another app builder"</h2>
+      <div style="display:flex; flex-direction:column; gap:20px;">
+        <div class="reveal" style="display:flex; align-items:start; gap:20px;">
+          <div style="width:48px; height:48px; border-radius:12px; background:rgba(157,80,221,0.15); display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0;">🔗</div>
+          <div><div style="font-size:18px; font-weight:700;">Natively connected to your data</div><div style="font-size:14px; color:var(--muted); margin-top:4px;">Vibe apps talk to existing boards, workflows, and integrations. No APIs to configure. No data exports. It's already wired in.</div></div>
+        </div>
+        <div class="reveal delay-1" style="display:flex; align-items:start; gap:20px;">
+          <div style="width:48px; height:48px; border-radius:12px; background:rgba(157,80,221,0.15); display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0;">🛡️</div>
+          <div><div style="font-size:18px; font-weight:700;">Enterprise-ready from day one</div><div style="font-size:14px; color:var(--muted); margin-top:4px;">Governance, security, compliance, admin-controlled publish permissions. Built on mondayDB + leading LLMs. This isn't a toy.</div></div>
+        </div>
+        <div class="reveal delay-2" style="display:flex; align-items:start; gap:20px;">
+          <div style="width:48px; height:48px; border-radius:12px; background:rgba(157,80,221,0.15); display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0;">🚀</div>
+          <div><div style="font-size:18px; font-weight:700;">From prompt to production in minutes</div><div style="font-size:14px; color:var(--muted); margin-top:4px;">Build and test for free. Vibe is a paid add-on (per published app). Know the pricing model — check the support docs for current rates.</div></div>
+        </div>
+        <div class="reveal delay-3" style="display:flex; align-items:start; gap:20px;">
+          <div style="width:48px; height:48px; border-radius:12px; background:rgba(157,80,221,0.15); display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0;">🎯</div>
+          <div><div style="font-size:18px; font-weight:700;">The ultimate "yes we can" for SEs</div><div style="font-size:14px; color:var(--muted); margin-top:4px;">Customer asks for something niche? Don't say "let me check with product." Say "let me build it for you right now."</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- What makes a great vibe -->
+    <div style="margin-top:60px;">
+      <h2 class="reveal" style="font-size:28px; font-weight:700; margin-bottom:28px;">What makes a <span style="color:var(--violet);">great</span> Vibe</h2>
+      <div class="comparison">
+        <div class="card reveal" style="border-color:rgba(0,202,114,0.3);">
+          <div style="font-size:16px; font-weight:700; color:var(--green); margin-bottom:14px;">✅ Do this</div>
+          <div style="display:flex; flex-direction:column; gap:10px; font-size:14px; color:var(--muted);">
+            <div>• Start with the <strong style="color:#fff;">customer's pain</strong>, not a feature list</div>
+            <div>• Describe the <strong style="color:#fff;">persona</strong> who will use it daily</div>
+            <div>• Specify the <strong style="color:#fff;">data</strong> it needs to connect to</div>
+            <div>• Mention the <strong style="color:#fff;">actions</strong> users should be able to take</div>
+            <div>• Include <strong style="color:#fff;">visual preferences</strong> (dark mode, dashboard style, card layout)</div>
+            <div>• Iterate — round 1 is never the final product</div>
+          </div>
+        </div>
+        <div class="card reveal delay-1" style="border-color:rgba(251,39,93,0.3);">
+          <div style="font-size:16px; font-weight:700; color:var(--red); margin-bottom:14px;">❌ Not this</div>
+          <div style="display:flex; flex-direction:column; gap:10px; font-size:14px; color:var(--muted);">
+            <div>• "Build me an app" — too vague, generic output</div>
+            <div>• Feature shopping — listing 20 things without context</div>
+            <div>• Ignoring the user — who actually uses this thing?</div>
+            <div>• Skipping data connections — an island app is useless</div>
+            <div>• One-and-done prompting — always refine</div>
+            <div>• Forgetting governance — who can publish? who can see it?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- PART 3: SE LENS                                             -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="section full-center" id="se-lens" style="min-height:50vh;">
+  <div class="section-divider reveal"></div>
+  <div class="part-label reveal" style="color:var(--yellow);">Part 3</div>
+  <h1 class="reveal delay-1" style="font-size:52px; font-weight:800;">The <span class="gradient-text">SE lens</span></h1>
+  <p class="reveal delay-2" style="font-size:20px; color:var(--muted); margin-top:20px;">Stop throwing AI at the wall. Start prescribing it.</p>
+</section>
+
+<section class="section" style="min-height:auto; padding-top:40px;">
+  <div style="max-width:1000px; margin:0 auto;">
+    <h2 class="reveal" style="font-size:13px; font-weight:600; color:var(--yellow); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">What to listen for</h2>
+    <h1 class="reveal" style="font-size:34px; font-weight:700; margin-bottom:28px;">Customer says → You prescribe</h1>
+    <div style="display:flex; flex-direction:column; gap:12px;">
+      <div class="signal-row reveal"><div style="flex:2; font-size:14px; color:var(--muted);">"We spend hours manually tagging / categorizing incoming requests"</div><div style="font-size:18px;">→</div><div style="flex:1;"><span class="pill" style="background:rgba(97,97,255,0.15); color:var(--purple);">AI Blocks</span> <span style="font-size:13px; color:var(--muted);">Categorize + Extract</span></div></div>
+      <div class="signal-row reveal delay-1"><div style="flex:2; font-size:14px; color:var(--muted);">"Our process has 5+ handoffs and things fall through the cracks"</div><div style="font-size:18px;">→</div><div style="flex:1;"><span class="pill" style="background:rgba(0,202,114,0.15); color:var(--green);">AI Workflows</span> <span style="font-size:13px; color:var(--muted);">Multi-step pipeline</span></div></div>
+      <div class="signal-row reveal delay-2"><div style="flex:2; font-size:14px; color:var(--muted);">"Action items from meetings never make it into our system"</div><div style="font-size:18px;">→</div><div style="flex:1;"><span class="pill" style="background:rgba(255,204,0,0.15); color:var(--yellow);">Notetaker</span> <span style="font-size:13px; color:var(--muted);">Transcribe + push to boards</span></div></div>
+      <div class="signal-row reveal delay-3"><div style="flex:2; font-size:14px; color:var(--muted);">"We need something custom but don't have dev resources"</div><div style="font-size:18px;">→</div><div style="flex:1;"><span class="pill" style="background:rgba(157,80,221,0.15); color:var(--violet);">Vibe</span> <span style="font-size:13px; color:var(--muted);">Build it live</span></div></div>
+      <div class="signal-row reveal delay-4"><div style="flex:2; font-size:14px; color:var(--muted);">"We want AI to actually do the work, not just surface insights"</div><div style="font-size:18px;">→</div><div style="flex:1;"><span class="pill" style="background:rgba(251,39,93,0.15); color:var(--red);">Agents</span> <span style="font-size:13px; color:var(--muted);">Digital Workers</span></div></div>
+      <div class="signal-row reveal"><div style="flex:2; font-size:14px; color:var(--muted);">"We don't even know where to start with AI"</div><div style="font-size:18px;">→</div><div style="flex:1;"><span class="pill" style="background:rgba(97,97,255,0.15); color:var(--purple);">AI Board Suggestions</span> <span style="font-size:13px; color:var(--muted);">Let monday tell them</span></div></div>
+    </div>
+
+    <!-- Don't throw AI at the wall -->
+    <div style="margin-top:60px; max-width:850px; margin-left:auto; margin-right:auto;">
+      <h1 class="reveal" style="font-size:32px; font-weight:700; margin-bottom:16px;">Don't throw AI at the wall</h1>
+      <p class="reveal" style="font-size:16px; color:var(--muted); margin-bottom:32px;">The worst thing you can do is show every AI feature hoping something sticks. Customers don't want a product tour — they want someone who heard their problem and can solve it.</p>
+      <div class="comparison reveal">
+        <div style="text-align:center;">
+          <div style="font-size:48px; margin-bottom:8px;">🚫</div>
+          <div style="font-size:16px; font-weight:700; color:var(--red); margin-bottom:6px;">Feature dump</div>
+          <div style="font-size:13px; color:var(--muted);">"Let me show you our AI Blocks, and our Workflows, and our Notetaker, and our Agents, and our Vibe..."</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:48px; margin-bottom:8px;">🎯</div>
+          <div style="font-size:16px; font-weight:700; color:var(--green); margin-bottom:6px;">Prescribe the fix</div>
+          <div style="font-size:13px; color:var(--muted);">"You mentioned tickets take 20 min to triage. Let me show you how AI categorizes and routes them in seconds."</div>
+        </div>
+      </div>
+      <div class="reveal delay-1 callout" style="margin-top:28px; text-align:center; background:rgba(97,97,255,0.04); border-color:rgba(97,97,255,0.15);">
+        <div style="font-size:18px; font-weight:700;">The formula: <span style="color:var(--purple);">Hear the pain</span> → <span style="color:var(--green);">Match the product</span> → <span style="color:var(--violet);">Demo just that</span></div>
+        <div style="font-size:13px; color:var(--muted); margin-top:6px;">One well-placed AI demo moment beats ten feature drive-bys.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- PART 4: PPDAV                                               -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="section full-center" id="ppdav" style="min-height:50vh;">
+  <div class="section-divider reveal"></div>
+  <div class="part-label reveal" style="color:var(--violet);">Part 4</div>
+  <h1 class="reveal delay-1" style="font-size:52px; font-weight:800;">Translating pain into <span style="color:var(--violet);">Vibe</span></h1>
+  <p class="reveal delay-2" style="font-size:20px; color:var(--muted); margin-top:20px;">From customer problem to custom app in minutes</p>
+</section>
+
+<section class="section" style="min-height:auto; padding-top:40px;">
+  <div style="max-width:900px; margin:0 auto;">
+    <h2 class="reveal" style="font-size:13px; font-weight:600; color:var(--violet); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">The framework</h2>
+    <h1 class="reveal" style="font-size:36px; font-weight:700; margin-bottom:32px;">The Vibe prompt formula</h1>
+    <div style="display:flex; flex-direction:column; gap:18px;">
+      <div class="reveal" style="display:flex; align-items:center; gap:16px;">
+        <div style="width:48px; height:48px; border-radius:12px; background:rgba(251,39,93,0.15); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; color:var(--red); flex-shrink:0;">P</div>
+        <div><div style="font-size:18px; font-weight:700;">Pain</div><div style="font-size:14px; color:var(--muted);">What's broken? Use the customer's exact words.</div></div>
+      </div>
+      <div class="reveal delay-1" style="display:flex; align-items:center; gap:16px;">
+        <div style="width:48px; height:48px; border-radius:12px; background:rgba(97,97,255,0.15); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; color:var(--purple); flex-shrink:0;">P</div>
+        <div><div style="font-size:18px; font-weight:700;">Persona</div><div style="font-size:14px; color:var(--muted);">Who uses this app every day? What's their role?</div></div>
+      </div>
+      <div class="reveal delay-2" style="display:flex; align-items:center; gap:16px;">
+        <div style="width:48px; height:48px; border-radius:12px; background:rgba(0,202,114,0.15); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; color:var(--green); flex-shrink:0;">D</div>
+        <div><div style="font-size:18px; font-weight:700;">Data</div><div style="font-size:14px; color:var(--muted);">What boards, columns, or external data should it connect to?</div></div>
+      </div>
+      <div class="reveal delay-3" style="display:flex; align-items:center; gap:16px;">
+        <div style="width:48px; height:48px; border-radius:12px; background:rgba(255,204,0,0.15); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; color:var(--yellow); flex-shrink:0;">A</div>
+        <div><div style="font-size:18px; font-weight:700;">Actions</div><div style="font-size:14px; color:var(--muted);">What should users be able to do? Filter, approve, escalate, assign?</div></div>
+      </div>
+      <div class="reveal delay-4" style="display:flex; align-items:center; gap:16px;">
+        <div style="width:48px; height:48px; border-radius:12px; background:rgba(157,80,221,0.15); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; color:var(--violet); flex-shrink:0;">V</div>
+        <div><div style="font-size:18px; font-weight:700;">Visual</div><div style="font-size:14px; color:var(--muted);">Dashboard? Card layout? Dark mode? How should it look and feel?</div></div>
+      </div>
+    </div>
+    <div class="reveal callout" style="margin-top:28px; text-align:center; background:rgba(157,80,221,0.06); border-color:rgba(157,80,221,0.2);">
+      <div style="font-size:16px; font-weight:600; color:var(--violet);">P.P.D.A.V. — Pain, Persona, Data, Actions, Visual</div>
+      <div style="font-size:13px; color:var(--muted); margin-top:4px;">A Vibe prompt with all five is 10x better than "build me an app."</div>
+    </div>
+
+    <!-- Before / After -->
+    <div style="margin-top:60px;">
+      <h2 class="reveal" style="font-size:28px; font-weight:700; margin-bottom:28px;">Same request, different prompt</h2>
+      <div class="comparison">
+        <div class="reveal">
+          <div style="font-size:14px; font-weight:700; color:var(--red); margin-bottom:12px;">❌ Lazy prompt</div>
+          <div class="card" style="border-color:rgba(251,39,93,0.2); font-size:14px; color:var(--muted); line-height:1.7; font-family:monospace;">"Build me an app for tracking quality issues in our factory"</div>
+          <div style="margin-top:12px; font-size:13px; color:#666;">Result: Generic form + list. No context, no actions, no data connection. Useless in a demo.</div>
+        </div>
+        <div class="reveal delay-1">
+          <div style="font-size:14px; font-weight:700; color:var(--green); margin-bottom:12px;">✅ PPDAV prompt</div>
+          <div class="card" style="border-color:rgba(0,202,114,0.2); font-size:13px; color:var(--muted); line-height:1.8; font-family:monospace;">
+            "<strong style="color:var(--red);">Pain:</strong> Our QC team logs defects on paper, takes 3 days to spot trends.<br>
+            <strong style="color:var(--purple);">Persona:</strong> Floor supervisors who aren't tech-savvy, use iPads.<br>
+            <strong style="color:var(--green);">Data:</strong> Connect to our Production Tracking board (SKU, line, shift columns).<br>
+            <strong style="color:var(--yellow);">Actions:</strong> Log defect with photo, auto-categorize type, alert manager if critical, weekly trend chart.<br>
+            <strong style="color:var(--violet);">Visual:</strong> Mobile-first card layout, big buttons, dark mode for factory floor."
+          </div>
+          <div style="margin-top:12px; font-size:13px; color:var(--green);">Result: A demo-ready app the customer can see themselves using tomorrow.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- PART 5: VIBE CODING PARTY + SCENARIOS                       -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="section full-center" id="scenarios" style="min-height:50vh;">
+  <div class="section-divider reveal"></div>
+  <div class="part-label reveal" style="color:var(--red);">Part 5</div>
+  <h1 class="reveal delay-1" style="font-size:56px; font-weight:800;">Vibe Coding <span class="gradient-text">Party</span></h1>
+  <p class="reveal delay-2" style="font-size:22px; color:var(--muted); margin-top:20px; max-width:600px;">Pick a client. Read their pain. Build them a Vibe.</p>
+  <div class="reveal delay-3" style="margin-top:32px; display:flex; gap:16px;">
+    <span class="pill" style="background:rgba(0,202,114,0.15); color:var(--green);">20 min to build</span>
+    <span class="pill" style="background:rgba(97,97,255,0.15); color:var(--purple);">8 scenarios to choose from</span>
+    <span class="pill" style="background:rgba(251,39,93,0.15); color:var(--red);">Best Vibe wins</span>
+  </div>
+</section>
+
+<section class="section" style="min-height:auto; padding-top:40px;">
+  <div style="max-width:1000px; margin:0 auto;">
+    <!-- Rules -->
+    <h2 class="reveal" style="font-size:13px; font-weight:600; color:var(--green); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">How it works</h2>
+    <h1 class="reveal" style="font-size:36px; font-weight:700; margin-bottom:32px;">Vibe Coding Party rules</h1>
+    <div style="display:flex; flex-direction:column; gap:18px; margin-bottom:60px;">
+      <div class="reveal" style="display:flex; align-items:start; gap:20px;">
+        <div style="width:48px; height:48px; border-radius:12px; background:rgba(0,202,114,0.15); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800; color:var(--green); flex-shrink:0;">1</div>
+        <div><div style="font-size:20px; font-weight:600;">Pick a client scenario</div><div style="font-size:14px; color:var(--muted); margin-top:4px;">8 fake clients across different industries. Choose one that excites you (or scares you).</div></div>
+      </div>
+      <div class="reveal delay-1" style="display:flex; align-items:start; gap:20px;">
+        <div style="width:48px; height:48px; border-radius:12px; background:rgba(0,202,114,0.15); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800; color:var(--green); flex-shrink:0;">2</div>
+        <div><div style="font-size:20px; font-weight:600;">Use the PPDAV framework</div><div style="font-size:14px; color:var(--muted); margin-top:4px;">Pain, Persona, Data, Actions, Visual. The scenario gives you P and hints at the rest — flesh it out.</div></div>
+      </div>
+      <div class="reveal delay-2" style="display:flex; align-items:start; gap:20px;">
+        <div style="width:48px; height:48px; border-radius:12px; background:rgba(0,202,114,0.15); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800; color:var(--green); flex-shrink:0;">3</div>
+        <div><div style="font-size:20px; font-weight:600;">Build in monday Vibe</div><div style="font-size:14px; color:var(--muted); margin-top:4px;">Open Vibe, paste your prompt, iterate. You have 20 minutes. Round 1 is a draft — refine it.</div></div>
+      </div>
+      <div class="reveal delay-3" style="display:flex; align-items:start; gap:20px;">
+        <div style="width:48px; height:48px; border-radius:12px; background:rgba(97,97,255,0.15); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800; color:var(--purple); flex-shrink:0;">4</div>
+        <div><div style="font-size:20px; font-weight:600;">Show & Tell</div><div style="font-size:14px; color:var(--muted); margin-top:4px;">Volunteers share their Vibe + the prompt that built it. We judge on: relevance to pain, usability, and "would the client buy this?"</div></div>
+      </div>
+    </div>
+
+    <!-- Scenarios -->
+    <h2 class="reveal" style="font-size:28px; font-weight:700; margin-bottom:24px;">Choose a client</h2>
+    <div class="grid-2">
+      <div class="scenario-card reveal" style="border-left:3px solid var(--red);">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+          <span style="font-size:18px;">🏥</span>
+          <span style="font-size:15px; font-weight:700; color:var(--red);">Pinnacle Health Systems</span>
+          <span style="font-size:11px; color:#666; margin-left:auto;">Healthcare</span>
+        </div>
+        <div style="font-size:13px; color:var(--muted);">Patient referral tracking is a mess of spreadsheets and faxes. Referrals get lost, time-to-appointment is unknown, and nobody can see bottlenecks. Build a referral management app.</div>
+      </div>
+      <div class="scenario-card reveal delay-1" style="border-left:3px solid var(--purple);">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+          <span style="font-size:18px;">💰</span>
+          <span style="font-size:15px; font-weight:700; color:var(--purple);">Crestview Capital Partners</span>
+          <span style="font-size:11px; color:#666; margin-left:auto;">Private Equity</span>
+        </div>
+        <div style="font-size:13px; color:var(--muted);">Each partner tracks deals differently — some in Excel, some in their head. No unified pipeline visibility. LPs keep asking for reports nobody can produce. Build a deal flow tracker.</div>
+      </div>
+      <div class="scenario-card reveal" style="border-left:3px solid var(--green);">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+          <span style="font-size:18px;">⚙️</span>
+          <span style="font-size:15px; font-weight:700; color:var(--green);">Atlas Industrial</span>
+          <span style="font-size:11px; color:#666; margin-left:auto;">Manufacturing</span>
+        </div>
+        <div style="font-size:13px; color:var(--muted);">Quality defects are logged on paper clipboards. By the time trends are spotted, thousands of units have shipped. Need a defect tracker with photo capture and trend dashboards.</div>
+      </div>
+      <div class="scenario-card reveal delay-1" style="border-left:3px solid var(--yellow);">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+          <span style="font-size:18px;">🛒</span>
+          <span style="font-size:15px; font-weight:700; color:var(--yellow);">Bloom & Birch</span>
+          <span style="font-size:11px; color:#666; margin-left:auto;">Retail / E-commerce</span>
+        </div>
+        <div style="font-size:13px; color:var(--muted);">Product launches involve merch, marketing, and supply chain — but nobody has one view. Launch dates slip, inventory arrives late, campaigns go live before products are ready. Build a launch command center.</div>
+      </div>
+      <div class="scenario-card reveal" style="border-left:3px solid var(--violet);">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+          <span style="font-size:18px;">🏗️</span>
+          <span style="font-size:15px; font-weight:700; color:var(--violet);">Meridian Builders</span>
+          <span style="font-size:11px; color:#666; margin-left:auto;">Construction</span>
+        </div>
+        <div style="font-size:13px; color:var(--muted);">40+ active job sites. Permits and inspections tracked in a shared Google Sheet that's always outdated. Subcontractors never know what's next. Build a permit & inspection tracker.</div>
+      </div>
+      <div class="scenario-card reveal delay-1" style="border-left:3px solid var(--blue);">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+          <span style="font-size:18px;">🎓</span>
+          <span style="font-size:15px; font-weight:700; color:var(--blue);">BrightPath Academy</span>
+          <span style="font-size:11px; color:#666; margin-left:auto;">Education</span>
+        </div>
+        <div style="font-size:13px; color:var(--muted);">Student success data is split across 5 systems. Counselors can't see attendance + grades + interventions in one place. At-risk students slip through the cracks. Build a student success dashboard.</div>
+      </div>
+      <div class="scenario-card reveal" style="border-left:3px solid var(--pink);">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+          <span style="font-size:18px;">🚚</span>
+          <span style="font-size:15px; font-weight:700; color:var(--pink);">Velocity Freight</span>
+          <span style="font-size:11px; color:#666; margin-left:auto;">Logistics</span>
+        </div>
+        <div style="font-size:13px; color:var(--muted);">Shippers have no way to compare carriers. Cost, on-time %, damage rates — all in different systems. Carrier negotiations are based on gut feel. Build a carrier scorecard app.</div>
+      </div>
+      <div class="scenario-card reveal delay-1" style="border-left:3px solid var(--orange);">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+          <span style="font-size:18px;">🎨</span>
+          <span style="font-size:15px; font-weight:700; color:var(--orange);">Signal Creative</span>
+          <span style="font-size:11px; color:#666; margin-left:auto;">Marketing Agency</span>
+        </div>
+        <div style="font-size:13px; color:var(--muted);">30+ client campaigns running simultaneously. Deliverables, approvals, and deadlines are scattered across Slack, email, and spreadsheets. Build a campaign command center.</div>
+      </div>
+    </div>
+
+    <!-- PPDAV cheat sheet -->
+    <div class="reveal callout" style="margin-top:32px; background:rgba(157,80,221,0.06); border-color:rgba(157,80,221,0.2);">
+      <div style="font-size:14px; font-weight:700; color:var(--violet); margin-bottom:10px;">PPDAV Cheat Sheet</div>
+      <div style="font-size:13px; color:var(--muted); line-height:1.8;">
+        <strong style="color:var(--red);">P</strong>ain — what's broken? ·
+        <strong style="color:var(--purple);">P</strong>ersona — who uses it daily? ·
+        <strong style="color:var(--green);">D</strong>ata — what boards/columns to connect? ·
+        <strong style="color:var(--yellow);">A</strong>ctions — what can users do? ·
+        <strong style="color:var(--violet);">V</strong>isual — how should it look?
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:40px; font-size:14px; color:var(--muted);">
+      Think like an SE: you're building this for a real prospect meeting next week.
+    </div>
+  </div>
+</section>
+
+<!-- Spacer -->
+<div style="height:120px;"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SCRIPTS                                                     -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<script>
+// ── Scroll reveal ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ── Progress bar ──
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = (scrollTop / docHeight) * 100;
+  document.getElementById('progressBar').style.width = progress + '%';
+
+  // Top bar style
+  document.getElementById('topBar').classList.toggle('scrolled', scrollTop > 80);
+});
+
+// ── Side nav active state ──
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.side-nav a');
+
+const navObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(link => link.classList.remove('active'));
+      const activeLink = document.querySelector(`.side-nav a[data-section="${entry.target.id}"]`);
+      if (activeLink) activeLink.classList.add('active');
+    }
+  });
+}, { threshold: 0.3, rootMargin: '-20% 0px -60% 0px' });
+
+sections.forEach(section => navObserver.observe(section));
+</script>
+
+</body>
+</html>
