@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Monday AI Tour — The AI Uplevel Series</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Figtree', sans-serif; background: #000; color: #fff; overflow: hidden; }
+
+  .slide {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 80px;
+  }
+  .slide.active { display: flex; }
+
+  .slide-number {
+    position: fixed;
+    bottom: 24px;
+    right: 32px;
+    font-size: 14px;
+    color: #A9AEBE;
+    font-family: 'Figtree', sans-serif;
+    z-index: 100;
+  }
+
+  .nav-dots {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 100;
+  }
+  .nav-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .nav-dot.active { background: #6161FF; transform: scale(1.3); }
+  .nav-dot:hover { background: rgba(97,97,255,0.6); }
+
+  .nav-arrows {
+    position: fixed;
+    bottom: 20px;
+    left: 32px;
+    display: flex;
+    gap: 8px;
+    z-index: 100;
+  }
+  .nav-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(31,34,68,0.8);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: all 0.2s;
+  }
+  .nav-btn:hover { background: #6161FF; border-color: #6161FF; }
+
+  h1 { font-family: 'Poppins', sans-serif; }
+  h2 { font-family: 'Poppins', sans-serif; }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #6161FF, #00CA72);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .card {
+    background: #1F2244;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 32px;
+  }
+
+  .glow { box-shadow: 0 0 40px rgba(97,97,255,0.15); }
+  .glow-green { box-shadow: 0 0 40px rgba(0,202,114,0.12); }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .fade-in { animation: fadeIn 0.6s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+
+  .section-label {
+    position: fixed;
+    top: 28px;
+    right: 32px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #A9AEBE;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    z-index: 100;
+    font-family: 'Figtree', sans-serif;
+  }
+
+  .layer-card {
+    background: #1F2244;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 24px;
+    flex: 1;
+    transition: all 0.3s;
+  }
+  .layer-card:hover { border-color: rgba(97,97,255,0.4); }
+
+  .product-card {
+    background: #1F2244;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 18px 22px;
+    transition: all 0.3s;
+  }
+  .product-card:hover { border-color: rgba(97,97,255,0.3); }
+
+  .signal-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+    background: #1F2244;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+  }
+
+  .scenario-card {
+    background: #1F2244;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 14px 18px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Section label -->
+<div class="section-label" id="sectionLabel"></div>
+
+<!-- ===================== SLIDE 1: Title ===================== -->
+<div class="slide active" id="slide-0">
+  <div class="fade-in" style="text-align:center;">
+    <div style="font-size:13px; font-weight:600; color:#6161FF; text-transform:uppercase; letter-spacing:3px; margin-bottom:20px;">The AI Uplevel Series &middot; Session 4</div>
+    <h1 style="font-size:64px; font-weight:800; line-height:1.1; margin-bottom:24px;">
+      The Monday <span class="gradient-text">AI Tour</span>
+    </h1>
+    <p style="font-size:22px; color:#A9AEBE; max-width:700px; margin:0 auto 32px;">
+      Know the products. Read the signals. Build the Vibe.
+    </p>
+    <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+      <span class="status-pill" style="background:rgba(97,97,255,0.15); color:#6161FF;">AI Blocks</span>
+      <span class="status-pill" style="background:rgba(0,202,114,0.15); color:#00CA72;">Workflows</span>
+      <span class="status-pill" style="background:rgba(87,155,252,0.15); color:#579BFC;">Sidekick</span>
+      <span class="status-pill" style="background:rgba(255,204,0,0.15); color:#FFCC00;">Notetaker</span>
+      <span class="status-pill" style="background:rgba(251,39,93,0.15); color:#FB275D;">Agents</span>
+      <span class="status-pill" style="background:rgba(157,80,221,0.15); color:#9D50DD;">Vibe</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 2: Agenda ===================== -->
+<div class="slide" id="slide-1">
+  <div class="fade-in" style="max-width:800px; width:100%;">
+    <h2 style="font-size:13px; font-weight:600; color:#6161FF; text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">Today's agenda</h2>
+    <h1 style="font-size:44px; font-weight:700; margin-bottom:40px;">60 minutes</h1>
+    <div style="display:flex; flex-direction:column; gap:20px;">
+      <div style="display:flex; align-items:center; gap:20px;">
+        <div style="width:52px; height:52px; border-radius:14px; background:rgba(97,97,255,0.12); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; color:#6161FF; flex-shrink:0;">1</div>
+        <div>
+          <div style="font-size:20px; font-weight:600;">Why monday AI is different</div>
+          <div style="font-size:14px; color:#A9AEBE; margin-top:2px;">Competitive differentiators & the 3 pillars of monday AI</div>
+        </div>
+        <div style="margin-left:auto; font-size:14px; color:#A9AEBE;">5 min</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:20px;">
+        <div style="width:52px; height:52px; border-radius:14px; background:rgba(0,202,114,0.12); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; color:#00CA72; flex-shrink:0;">2</div>
+        <div>
+          <div style="font-size:20px; font-weight:600;">The product tour</div>
+          <div style="font-size:14px; color:#A9AEBE; margin-top:2px;">Blocks, Workflows, Sidekick, Notetaker, Agents — what each does and when to show it</div>
+        </div>
+        <div style="margin-left:auto; font-size:14px; color:#A9AEBE;">15 min</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:20px;">
+        <div style="width:52px; height:52px; border-radius:14px; background:rgba(255,204,0,0.12); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; color:#FFCC00; flex-shrink:0;">3</div>
+        <div>
+          <div style="font-size:20px; font-weight:600;">The SE lens</div>
+          <div style="font-size:14px; color:#A9AEBE; margin-top:2px;">What to listen for & which AI to prescribe</div>
+        </div>
+        <div style="margin-left:auto; font-size:14px; color:#A9AEBE;">5 min</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:20px;">
+        <div style="width:52px; height:52px; border-radius:14px; background:rgba(157,80,221,0.12); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; color:#9D50DD; flex-shrink:0;">4</div>
+        <div>
+          <div style="font-size:20px; font-weight:600;">monday Vibe + Translating pain</div>
+          <div style="font-size:14px; color:#A9AEBE; margin-top:2px;">Deep dive on Vibe, PPDAV framework, turning customer pain into killer apps</div>
+        </div>
+        <div style="margin-left:auto; font-size:14px; color:#A9AEBE;">11 min</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:20px;">
+        <div style="width:52px; height:52px; border-radius:14px; background:rgba(251,39,93,0.12); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; color:#FB275D; flex-shrink:0;">5</div>
+        <div>
+          <div style="font-size:20px; font-weight:600;">Vibe Coding Party + Show & Tell</div>
+          <div style="font-size:14px; color:#A9AEBE; margin-top:2px;">Pick a client, build a Vibe, compete for glory</div>
+        </div>
+        <div style="margin-left:auto; font-size:14px; color:#A9AEBE;">24 min</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 3: Section — Platform Differentiators ===================== -->
+<div class="slide" id="slide-2">
+  <div class="fade-in" style="text-align:center;">
+    <div style="font-size:13px; font-weight:600; color:#6161FF; text-transform:uppercase; letter-spacing:3px; margin-bottom:20px;">Part 1</div>
+    <h1 style="font-size:56px; font-weight:800; line-height:1.1;">
+      Why monday AI<br>is <span class="gradient-text">different</span>
+    </h1>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 4: Not a Bolt-on ===================== -->
+<div class="slide" id="slide-3">
+  <div class="fade-in" style="max-width:900px; width:100%;">
+    <h2 style="font-size:13px; font-weight:600; color:#6161FF; text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">The key message</h2>
+    <h1 style="font-size:40px; font-weight:700; margin-bottom:16px;">AI that <em>works</em>, not AI that <em>talks</em></h1>
+    <p style="font-size:17px; color:#A9AEBE; margin-bottom:36px; line-height:1.6;">Every competitor bolted a chatbot onto their platform and called it AI. monday built AI into the fabric of how work actually gets done.</p>
+    <div style="display:flex; gap:20px;">
+      <div class="card glow" style="flex:1; text-align:center;">
+        <div style="font-size:36px; margin-bottom:12px;">&#129302;</div>
+        <div style="font-size:18px; font-weight:700; margin-bottom:8px;">Everyone else</div>
+        <div style="font-size:14px; color:#A9AEBE; line-height:1.6;">"Ask the chatbot a question"<br>Passive. Siloed. No action.</div>
+      </div>
+      <div class="card" style="flex:1; text-align:center; border-color:rgba(0,202,114,0.3);">
+        <div style="font-size:36px; margin-bottom:12px;">&#9889;</div>
+        <div style="font-size:18px; font-weight:700; color:#00CA72; margin-bottom:8px;">monday.com</div>
+        <div style="font-size:14px; color:#A9AEBE; line-height:1.6;">AI embedded in columns, automations, workflows, and apps.<br><strong style="color:#fff;">It doesn't just answer — it acts.</strong></div>
+      </div>
+    </div>
+    <div style="margin-top:28px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+      <span class="status-pill" style="background:rgba(0,202,114,0.12); color:#00CA72;">&#128274; Data never trains models</span>
+      <span class="status-pill" style="background:rgba(97,97,255,0.12); color:#6161FF;">&#128101; Admin controls per role</span>
+      <span class="status-pill" style="background:rgba(255,204,0,0.12); color:#FFCC00;">&#128176; Predictable credit pricing</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 5: 3-Layer Architecture ===================== -->
+<div class="slide" id="slide-4">
+  <div class="fade-in" style="max-width:1050px; width:100%;">
+    <h2 style="font-size:13px; font-weight:600; color:#6161FF; text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">The AI platform</h2>
+    <h1 style="font-size:38px; font-weight:700; margin-bottom:12px;">Three pillars of monday AI</h1>
+    <p style="font-size:16px; color:#A9AEBE; margin-bottom:36px; line-height:1.5;">Every AI capability maps to one of three intuitive categories. Together, they cover the full lifecycle of how teams get work done.</p>
+    <div style="display:flex; gap:20px;">
+      <div class="layer-card" style="border-top:3px solid #00CA72;">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+          <div style="width:40px; height:40px; border-radius:10px; background:rgba(0,202,114,0.12); display:flex; align-items:center; justify-content:center; font-size:20px;">&#128300;</div>
+          <div style="font-size:22px; font-weight:700;">Understand</div>
+        </div>
+        <div style="font-size:14px; color:#A9AEBE; line-height:1.6;">AI that surfaces context, answers questions, and captures knowledge so your team always has the full picture.</div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:16px;">
+          <span style="padding:4px 14px; border-radius:20px; font-size:12px; font-weight:600; background:rgba(0,202,114,0.1); color:#00CA72; border:1px solid rgba(0,202,114,0.25);">Sidekick</span>
+          <span style="padding:4px 14px; border-radius:20px; font-size:12px; font-weight:600; background:rgba(0,202,114,0.1); color:#00CA72; border:1px solid rgba(0,202,114,0.25);">Notetaker</span>
+        </div>
+      </div>
+      <div class="layer-card" style="border-top:3px solid #6161FF;">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+          <div style="width:40px; height:40px; border-radius:10px; background:rgba(97,97,255,0.12); display:flex; align-items:center; justify-content:center; font-size:20px;">&#9881;&#65039;</div>
+          <div style="font-size:22px; font-weight:700;">Create</div>
+        </div>
+        <div style="font-size:14px; color:#A9AEBE; line-height:1.6;">AI that helps you build boards, generate content, write formulas, and compose visuals — right where you're already working.</div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:16px;">
+          <span style="padding:4px 14px; border-radius:20px; font-size:12px; font-weight:600; background:rgba(97,97,255,0.1); color:#6161FF; border:1px solid rgba(97,97,255,0.25);">AI Blocks</span>
+          <span style="padding:4px 14px; border-radius:20px; font-size:12px; font-weight:600; background:rgba(97,97,255,0.1); color:#6161FF; border:1px solid rgba(97,97,255,0.25);">Vibe</span>
+        </div>
+      </div>
+      <div class="layer-card" style="border-top:3px solid #579BFC;">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+          <div style="width:40px; height:40px; border-radius:10px; background:rgba(87,155,252,0.12); display:flex; align-items:center; justify-content:center; font-size:20px;">&#9889;</div>
+          <div style="font-size:22px; font-weight:700;">Automate</div>
+        </div>
+        <div style="font-size:14px; color:#A9AEBE; line-height:1.6;">AI that takes action on your behalf — running workflows, managing processes, and handling tasks so people can focus on decisions.</div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:16px;">
+          <span style="padding:4px 14px; border-radius:20px; font-size:12px; font-weight:600; background:rgba(87,155,252,0.1); color:#579BFC; border:1px solid rgba(87,155,252,0.25);">AI Workflows</span>
+          <span style="padding:4px 14px; border-radius:20px; font-size:12px; font-weight:600; background:rgba(87,155,252,0.1); color:#579BFC; border:1px solid rgba(87,155,252,0.25);">AI Agents</span>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:24px; font-size:14px; color:#A9AEBE;">
+      <em>"Software that manages work → Software that <strong style="color:#fff;">does</strong> work"</em>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 6: Section — Product Tour ===================== -->
+<div class="slide" id="slide-5">
+  <div class="fade-in" style="text-align:center;">
+    <div style="font-size:13px; font-weight:600; color:#00CA72; text-transform:uppercase; letter-spacing:3px; margin-bottom:20px;">Part 2</div>
+    <h1 style="font-size:56px; font-weight:800; line-height:1.1;">
+      The product <span class="gradient-text">tour</span>
+    </h1>
+    <p style="font-size:20px; color:#A9AEBE; margin-top:20px;">What each AI product does and when to show it</p>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 7: AI Blocks ===================== -->
+<div class="slide" id="slide-6">
+  <div class="fade-in" style="max-width:1000px; width:100%;">
+    <h2 style="font-size:13px; font-weight:600; color:#6161FF; text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">Layer 1</h2>
+    <h1 style="font-size:38px; font-weight:700; margin-bottom:28px;">AI Blocks</h1>
+    <p style="font-size:16px; color:#A9AEBE; margin-bottom:28px;">Pre-built AI functions you plug into columns, automations, and workflows. Seven block types cover 90% of use cases.</p>
+    <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:14px;">
+      <div class="product-card" style="border-left:3px solid #6161FF;">
+        <div style="font-size:15px; font-weight:700;">Extract Info</div>
+        <div style="font-size:12px; color:#A9AEBE; margin-top:6px;">Pull data from PDFs, text, images. Invoice parsing, resume screening.</div>
+      </div>
+      <div class="product-card" style="border-left:3px solid #00CA72;">
+        <div style="font-size:15px; font-weight:700;">Categorize</div>
+        <div style="font-size:12px; color:#A9AEBE; margin-top:6px;">Classify at scale. Ticket triage, lead scoring, content tagging.</div>
+      </div>
+      <div class="product-card" style="border-left:3px solid #FFCC00;">
+        <div style="font-size:15px; font-weight:700;">Detect Sentiment</div>
+        <div style="font-size:12px; color:#A9AEBE; margin-top:6px;">Positive/negative/neutral. NPS routing, feedback analysis.</div>
+      </div>
+      <div class="product-card" style="border-left:3px solid #FB275D;">
+        <div style="font-size:15px; font-weight:700;">Summarize</div>
+        <div style="font-size:12px; color:#A9AEBE; margin-top:6px;">Condense updates into key points. Exec briefings, status rollups.</div>
+      </div>
+      <div class="product-card" style="border-left:3px solid #9D50DD;">
+        <div style="font-size:15px; font-weight:700;">Translate</div>
+        <div style="font-size:12px; color:#A9AEBE; margin-top:6px;">Accurate translation and localization for global teams.</div>
+      </div>
+      <div class="product-card" style="border-left:3px solid #579BFC;">
+        <div style="font-size:15px; font-weight:700;">Generate Docs</div>
+        <div style="font-size:12px; color:#A9AEBE; margin-top:6px;">Create documents from board data. Briefs, posts, reports.</div>
+      </div>
+      <div class="product-card" style="border-left:3px solid #FF5AC4;">
+        <div style="font-size:15px; font-weight:700;">Custom Prompt</div>
+        <div style="font-size:12px; color:#A9AEBE; margin-top:6px;">Write any prompt. The wildcard for anything the other 6 don't cover.</div>
+      </div>
+      <div class="product-card" style="border-left:3px solid #00CA72; border-style:dashed;">
+        <div style="font-size:15px; font-weight:700; color:#00CA72;">SE tip</div>
+        <div style="font-size:12px; color:#A9AEBE; margin-top:6px;">Show "AI Board Suggestions" — monday recommends blocks + estimated hours saved.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 8: Where Blocks Live ===================== -->
+<div class="slide" id="slide-7">
+  <div class="fade-in" style="max-width:900px; width:100%;">
+    <h2 style="font-size:13px; font-weight:600; color:#6161FF; text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">AI Blocks</h2>
+    <h1 style="font-size:36px; font-weight:700; margin-bottom:32px;">Where they live</h1>
+    <div style="display:flex; flex-direction:column; gap:20px;">
+      <div style="display:flex; align-items:start; gap:24px;">
+        <div style="width:56px; height:56px; border-radius:14px; background:rgba(97,97,255,0.12); display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0;">&#128204;</div>
+        <div>
+          <div style="font-size:20px; font-weight:700;">AI-Powered Columns</div>
+          <div style="font-size:15px; color:#A9AEBE; margin-top:6px; line-height:1.6;">Add via Column Center > AI-powered tab. Processes data per-item automatically. Auto-updates when new items are created. This is where most demos start.</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:start; gap:24px;">
+        <div style="width:56px; height:56px; border-radius:14px; background:rgba(0,202,114,0.12); display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0;">&#9889;</div>
+        <div>
+          <div style="font-size:20px; font-weight:700;">AI-Powered Automations</div>
+          <div style="font-size:15px; color:#A9AEBE; margin-top:6px; line-height:1.6;">Trigger AI actions on status changes, date arrivals, item creation. "When status changes to Review → AI summarizes all updates → notifies approver."</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:start; gap:24px;">
+        <div style="width:56px; height:56px; border-radius:14px; background:rgba(157,80,221,0.12); display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0;">&#128260;</div>
+        <div>
+          <div style="font-size:20px; font-weight:700;">Workflow Builder</div>
+          <div style="font-size:15px; color:#A9AEBE; margin-top:6px; line-height:1.6;">Chain multiple AI blocks with conditional logic, delays, cross-board actions. This is the power move — multi-step AI pipelines without code.</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:28px; padding:16px 24px; background:rgba(251,39,93,0.08); border:1px solid rgba(251,39,93,0.2); border-radius:12px;">
+      <div style="font-size:14px; color:#FB275D; font-weight:600;">&#128161; monday service gets unlimited AI blocks on the 4 service entity boards</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 9: AI Workflows ===================== -->
+<div class="slide" id="slide-8">
+  <div class="fade-in" style="max-width:950px; width:100%;">
+    <h2 style="font-size:13px; font-weight:600; color:#00CA72; text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">Layer 1+</h2>
+    <h1 style="font-size:38px; font-weight:700; margin-bottom:16px;">AI Workflows</h1>
+    <p style="font-size:16px; color:#A9AEBE; margin-bottom:28px;">The Workflow Builder is where AI Blocks become intelligent pipelines. Chain them, branch them, connect them across boards.</p>
+    <div style="background:#1F2244; border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:32px;">
+      <div style="font-size:14px; font-weight:600; color:#00CA72; margin-bottom:16px;">Example: Intelligent Ticket Routing</div>
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:center;">
+        <div style="padding:12px 18px; background:rgba(97,97,255,0.15); border-radius:10px; font-size:14px; font-weight:600;">New ticket arrives</div>
+        <div style="font-size:18px; color:#A9AEBE;">→</div>
+        <div style="padding:12px 18px; background:rgba(0,202,114,0.15); border-radius:10px; font-size:14px; font-weight:600;">AI Categorizes issue</div>
+        <div style="font-size:18px; color:#A9AEBE;">→</div>
+        <div style="padding:12px 18px; background:rgba(255,204,0,0.15); border-radius:10px; font-size:14px; font-weight:600;">AI Detects Sentiment</div>
+        <div style="font-size:18px; color:#A9AEBE;">→</div>
+        <div style="padding:12px 18px; background:rgba(251,39,93,0.15); border-radius:10px; font-size:14px; font-weight:600;">Routes to right team</div>
+        <div style="font-size:18px; color:#A9AEBE;">→</div>
+        <div style="padding:12px 18px; background:rgba(157,80,221,0.15); border-radius:10px; font-size:14px; font-weight:600;">AI Drafts response</div>
+      </div>
+      <div style="margin-top:20px; font-size:13px; color:#A9AEBE; text-align:center;">All automatic. No human in the loop until the drafted response needs review.</div>
+    </div>
+    <div style="display:flex; gap:16px; margin-top:24px;">
+      <div style="flex:1; padding:16px; background:rgba(97,97,255,0.06); border-radius:12px;">
+        <div style="font-size:14px; font-weight:600; color:#6161FF;">&#128172; Sidekick can build these</div>
+        <div style="font-size:12px; color:#A9AEBE; margin-top:4px;">"Manage IT support requests, auto-assign by issue type" → done.</div>
+      </div>
+      <div style="flex:1; padding:16px; background:rgba(0,202,114,0.06); border-radius:12px;">
+        <div style="font-size:14px; font-weight:600; color:#00CA72;">&#127919; Demo angle</div>
+        <div style="font-size:12px; color:#A9AEBE; margin-top:4px;">Show a multi-step workflow with AI at each node. This is the "oh wow" for ops leaders.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 10: Sidekick + MCP Positioning ===================== -->
+<div class="slide" id="slide-9b">
+  <div class="fade-in" style="max-width:950px; width:100%;">
+    <h2 style="font-size:13px; font-weight:600; color:#579BFC; text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">AI Product</h2>
+    <h1 style="font-size:38px; font-weight:700; margin-bottom:16px;">monday <span style="color:#579BFC;">Sidekick</span></h1>
+    <p style="font-size:16px; color:#A9AEBE; margin-bottom:24px;">Context-aware AI assistant embedded in the workspace. Understands your business, your data, your workflows — and takes action.</p>
+    <div style="display:flex; gap:20px; margin-bottom:24px;">
+      <div class="card" style="flex:1;">
+        <div style="font-size:28px; margin-bottom:10px;">&#128172;</div>
+        <div style="font-size:16px; font-weight:700; margin-bottom:6px;">Conversational AI</div>
+        <div style="font-size:13px; color:#A9AEBE; line-height:1.5;">Ask questions, generate content, summarize updates, get suggestions — all in natural language within monday.</div>
+      </div>
+      <div class="card" style="flex:1;">
+        <div style="font-size:28px; margin-bottom:10px;">&#9889;</div>
+        <div style="font-size:16px; font-weight:700; margin-bottom:6px;">Builds workflows</div>
+        <div style="font-size:13px; color:#A9AEBE; line-height:1.5;">"Manage IT requests, auto-assign by type" → generates a full workflow. The wow moment for non-technical stakeholders.</div>
+      </div>
+      <div class="card" style="flex:1;">
+        <div style="font-size:28px; margin-bottom:10px;">&#128274;</div>
+        <div style="font-size:16px; font-weight:700; margin-bottom:6px;">Full context</div>
+        <div style="font-size:13px; color:#A9AEBE; line-height:1.5;">Knows your boards, your items, your team. Answers with actual data, not generic responses. Lite on Standard+, Plus on Enterprise.</div>
+      </div>
+    </div>
+    <div style="background:#1F2244; border:1px solid rgba(87,155,252,0.25); border-radius:14px; padding:22px 28px;">
+      <div style="font-size:15px; font-weight:700; color:#579BFC; margin-bottom:10px;">&#128680; SE Positioning: Sidekick vs. MCP (Claude / Copilot)</div>
+      <div style="display:flex; gap:24px;">
+        <div style="flex:1;">
+          <div style="font-size:13px; font-weight:600; color:#00CA72; margin-bottom:6px;">Sidekick (position this)</div>
+          <div style="font-size:12px; color:#A9AEBE; line-height:1.6;">
+            &#8226; Lives <em>inside</em> monday — sees boards, items, people<br>
+            &#8226; Takes actions: creates items, updates statuses, builds workflows<br>
+            &#8226; Uses monday AI credits (predictable, admin-controlled)<br>
+            &#8226; Zero setup on Standard+ plans — works instantly in-platform
+          </div>
+        </div>
+        <div style="width:1px; background:rgba(255,255,255,0.08);"></div>
+        <div style="flex:1;">
+          <div style="font-size:13px; font-weight:600; color:#FFCC00; margin-bottom:6px;">MCP to Claude / Copilot (be careful)</div>
+          <div style="font-size:12px; color:#A9AEBE; line-height:1.6;">
+            &#8226; Lives <em>outside</em> monday — reads data via API connector<br>
+            &#8226; Can query but can't natively act inside monday<br>
+            &#8226; Uses customer's own LLM license (bypasses monday credits)<br>
+            &#8226; Great for power users, but <strong style="color:#FB275D;">cannibalizes Sidekick adoption</strong>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:14px; padding:10px 16px; background:rgba(251,39,93,0.08); border-radius:8px; font-size:12px; color:#A9AEBE;">
+        <strong style="color:#fff;">The talk track:</strong> "MCP is great for devs who live in their IDE. But for the 90% of your org that works in monday every day, Sidekick is the answer — no setup, full context, takes action. Don't let the tail wag the dog."
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 11: Notetaker ===================== -->
+<div class="slide" id="slide-9">
+  <div class="fade-in" style="max-width:850px; width:100%;">
+    <h2 style="font-size:13px; font-weight:600; color:#FFCC00; text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">AI Product</h2>
+    <h1 style="font-size:38px; font-weight:700; margin-bottom:16px;">monday Notetaker</h1>
+    <p style="font-size:16px; color:#A9AEBE; margin-bottom:32px;">AI-powered meeting intelligence that turns conversations into actions — connected directly to your boards and workflows.</p>
+    <div style="display:flex; gap:20px;">
+      <div class="card" style="flex:1;">
+        <div style="font-size:28px; margin-bottom:12px;">&#127908;</div>
+        <div style="font-size:18px; font-weight:700; margin-bottom:8px;">Auto-transcribe</div>
+        <div style="font-size:14px; color:#A9AEBE; line-height:1.5;">Joins calls, records, and transcribes. Supports Zoom, Teams, Google Meet.</div>
+      </div>
+      <div class="card" style="flex:1;">
+        <div style="font-size:28px; margin-bottom:12px;">&#128203;</div>
+        <div style="font-size:18px; font-weight:700; margin-bottom:8px;">Smart summaries</div>
+        <div style="font-size:14px; color:#A9AEBE; line-height:1.5;">AI extracts key decisions, action items, and follow-ups. No more "what did we agree on?"</div>
+      </div>
+      <div class="card" style="flex:1;">
+        <div style="font-size:28px; margin-bottom:12px;">&#128279;</div>
+        <div style="font-size:18px; font-weight:700; margin-bottom:8px;">Connected to boards</div>
+        <div style="font-size:14px; color:#A9AEBE; line-height:1.5;">Action items push directly to monday boards as tasks. Meeting → work item in one click.</div>
+      </div>
+    </div>
+    <div style="margin-top:28px; padding:16px 24px; background:rgba(0,202,114,0.06); border:1px solid rgba(0,202,114,0.15); border-radius:12px;">
+      <div style="font-size:14px;"><strong style="color:#00CA72;">SE tip:</strong> <span style="color:#A9AEBE;">Great for any customer who says "meetings are where our action items go to die." That's your cue.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 11: Agents (Light Touch) ===================== -->
+<div class="slide" id="slide-10">
+  <div class="fade-in" style="max-width:950px; width:100%;">
+    <h2 style="font-size:13px; font-weight:600; color:#FB275D; text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">Layer 3 &middot; Preview</h2>
+    <h1 style="font-size:38px; font-weight:700; margin-bottom:16px;">Agents & Digital Workers</h1>
+    <p style="font-size:16px; color:#A9AEBE; margin-bottom:12px;">Autonomous AI that executes work end-to-end. We'll go deep next week at the agentic launch — here's the teaser.</p>
+    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; margin-bottom:20px;">
+      <div class="product-card">
+        <div style="font-size:14px; font-weight:700; color:#FB275D;">Project Analyzer</div>
+        <div style="font-size:12px; color:#A9AEBE; margin-top:4px;">Monitors hundreds of projects, flags bottlenecks proactively.</div>
+      </div>
+      <div class="product-card">
+        <div style="font-size:14px; font-weight:700; color:#FB275D;">Sales Coach</div>
+        <div style="font-size:12px; color:#A9AEBE; margin-top:4px;">Identifies rep skill gaps, delivers performance insights.</div>
+      </div>
+      <div class="product-card">
+        <div style="font-size:14px; font-weight:700; color:#FB275D;">Chris (AI SDR)</div>
+        <div style="font-size:12px; color:#A9AEBE; margin-top:4px;">Engages and qualifies leads in real-time. CRM product.</div>
+      </div>
+      <div class="product-card">
+        <div style="font-size:14px; font-weight:700; color:#FB275D;">AI Service Agent</div>
+        <div style="font-size:12px; color:#A9AEBE; margin-top:4px;">Proactive service resolution, monitors tickets.</div>
+      </div>
+      <div class="product-card">
+        <div style="font-size:14px; font-weight:700; color:#FB275D;">Web Researcher</div>
+        <div style="font-size:12px; color:#A9AEBE; margin-top:4px;">Web intelligence for research and decision acceleration.</div>
+      </div>
+      <div class="product-card">
+        <div style="font-size:14px; font-weight:700; color:#FB275D;">Agent Factory</div>
+        <div style="font-size:12px; color:#A9AEBE; margin-top:4px;">No-code builder for custom agents. The platform play.</div>
+      </div>
+    </div>
+    <div style="padding:16px 24px; background:rgba(251,39,93,0.08); border:1px solid rgba(251,39,93,0.2); border-radius:12px; text-align:center;">
+      <div style="font-size:16px; font-weight:600; color:#FB275D;">&#128640; Agentic deep dive is next week — stay tuned</div>
+      <div style="font-size:13px; color:#A9AEBE; margin-top:4px;">For now, know these exist and know the names. You'll be dangerous with them soon.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 12: monday Vibe ===================== -->
+<div class="slide" id="slide-11">
+  <div class="fade-in" style="max-width:850px; width:100%;">
+    <h2 style="font-size:13px; font-weight:600; color:#9D50DD; text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">AI Product &middot; Deep Dive</h2>
+    <h1 style="font-size:42px; font-weight:700; margin-bottom:16px;">monday <span style="color:#9D50DD;">Vibe</span></h1>
+    <p style="font-size:18px; color:#A9AEBE; margin-bottom:32px;">Describe what you need → get a fully functional custom monday app.<br>No code. No dev team. No waiting.</p>
+    <div style="display:flex; gap:20px; margin-bottom:24px;">
+      <div class="card glow" style="flex:1; text-align:center;">
+        <div style="font-size:40px; font-weight:800; color:#9D50DD;">17,000+</div>
+        <div style="font-size:14px; color:#A9AEBE; margin-top:4px;">apps built in week one</div>
+      </div>
+      <div class="card glow" style="flex:1; text-align:center;">
+        <div style="font-size:40px; font-weight:800; color:#00CA72;">$0</div>
+        <div style="font-size:14px; color:#A9AEBE; margin-top:4px;">to build & test — paid add-on to publish</div>
+      </div>
+      <div class="card glow" style="flex:1; text-align:center;">
+        <div style="font-size:40px; font-weight:800; color:#6161FF;">Add-on</div>
+        <div style="font-size:14px; color:#A9AEBE; margin-top:4px;">available across all plans with AI enabled</div>
+      </div>
+    </div>
+    <div style="font-size:15px; color:#A9AEBE; text-align:center; line-height:1.6;">
+      <strong style="color:#fff;">Demo power move:</strong> Build a custom app live during the demo. Nothing kills "but can it do THIS?" faster.
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 13: Why Vibe is Different ===================== -->
+<div class="slide" id="slide-12">
+  <div class="fade-in" style="max-width:900px; width:100%;">
+    <h2 style="font-size:13px; font-weight:600; color:#9D50DD; text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">monday Vibe</h2>
+    <h1 style="font-size:36px; font-weight:700; margin-bottom:28px;">Why Vibe isn't "just another app builder"</h1>
+    <div style="display:flex; flex-direction:column; gap:18px;">
+      <div style="display:flex; align-items:start; gap:20px;">
+        <div style="width:48px; height:48px; border-radius:12px; background:rgba(157,80,221,0.15); display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0;">&#128279;</div>
+        <div>
+          <div style="font-size:18px; font-weight:700;">Natively connected to your data</div>
+          <div style="font-size:14px; color:#A9AEBE; margin-top:4px; line-height:1.5;">Vibe apps talk to existing boards, workflows, and integrations. No APIs to configure. No data exports. It's already wired in.</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:start; gap:20px;">
+        <div style="width:48px; height:48px; border-radius:12px; background:rgba(157,80,221,0.15); display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0;">&#128737;</div>
+        <div>
+          <div style="font-size:18px; font-weight:700;">Enterprise-ready from day one</div>
+          <div style="font-size:14px; color:#A9AEBE; margin-top:4px; line-height:1.5;">Governance, security, compliance, admin-controlled publish permissions. Built on mondayDB + leading LLMs. This isn't a toy.</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:start; gap:20px;">
+        <div style="width:48px; height:48px; border-radius:12px; background:rgba(157,80,221,0.15); display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0;">&#128640;</div>
+        <div>
+          <div style="font-size:18px; font-weight:700;">From prompt to production in minutes</div>
+          <div style="font-size:14px; color:#A9AEBE; margin-top:4px; line-height:1.5;">Build and test for free. Vibe is a paid add-on (per published app). Know the pricing model — check the support docs for current rates.</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:start; gap:20px;">
+        <div style="width:48px; height:48px; border-radius:12px; background:rgba(157,80,221,0.15); display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0;">&#127919;</div>
+        <div>
+          <div style="font-size:18px; font-weight:700;">The ultimate "yes we can" for SEs</div>
+          <div style="font-size:14px; color:#A9AEBE; margin-top:4px; line-height:1.5;">Customer asks for something niche? Don't say "let me check with product." Say "let me build it for you right now."</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 14: What Makes a Great Vibe ===================== -->
+<div class="slide" id="slide-13">
+  <div class="fade-in" style="max-width:950px; width:100%;">
+    <h2 style="font-size:13px; font-weight:600; color:#9D50DD; text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">monday Vibe</h2>
+    <h1 style="font-size:36px; font-weight:700; margin-bottom:28px;">What makes a <span style="color:#9D50DD;">great</span> Vibe</h1>
+    <div style="display:flex; gap:20px;">
+      <div class="card" style="flex:1; border-color:rgba(0,202,114,0.3);">
+        <div style="font-size:16px; font-weight:700; color:#00CA72; margin-bottom:14px;">&#9989; Do this</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:14px; color:#A9AEBE; line-height:1.5;">
+          <div>&#8226; Start with the <strong style="color:#fff;">customer's pain</strong>, not a feature list</div>
+          <div>&#8226; Describe the <strong style="color:#fff;">persona</strong> who will use it daily</div>
+          <div>&#8226; Specify the <strong style="color:#fff;">data</strong> it needs to connect to</div>
+          <div>&#8226; Mention the <strong style="color:#fff;">actions</strong> users should be able to take</div>
+          <div>&#8226; Include <strong style="color:#fff;">visual preferences</strong> (dark mode, dashboard style, card layout)</div>
+          <div>&#8226; Iterate — round 1 is never the final product</div>
+        </div>
+      </div>
+      <div class="card" style="flex:1; border-color:rgba(251,39,93,0.3);">
+        <div style="font-size:16px; font-weight:700; color:#FB275D; margin-bottom:14px;">&#10060; Not this</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:14px; color:#A9AEBE; line-height:1.5;">
+          <div>&#8226; "Build me an app" — too vague, generic output</div>
+          <div>&#8226; Feature shopping — listing 20 things without context</div>
+          <div>&#8226; Ignoring the user — who actually uses this thing?</div>
+          <div>&#8226; Skipping data connections — an island app is useless</div>
+          <div>&#8226; One-and-done prompting — always refine</div>
+          <div>&#8226; Forgetting governance — who can publish? who can see it?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 15: Section — SE Lens ===================== -->
+<div class="slide" id="slide-14">
+  <div class="fade-in" style="text-align:center;">
+    <div style="font-size:13px; font-weight:600; color:#FFCC00; text-transform:uppercase; letter-spacing:3px; margin-bottom:20px;">Part 3</div>
+    <h1 style="font-size:52px; font-weight:800; line-height:1.1;">
+      The <span class="gradient-text">SE lens</span>
+    </h1>
+    <p style="font-size:20px; color:#A9AEBE; margin-top:20px;">Stop throwing AI at the wall. Start prescribing it.</p>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 16: Discovery Signals ===================== -->
+<div class="slide" id="slide-15">
+  <div class="fade-in" style="max-width:1000px; width:100%;">
+    <h2 style="font-size:13px; font-weight:600; color:#FFCC00; text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">What to listen for</h2>
+    <h1 style="font-size:34px; font-weight:700; margin-bottom:24px;">Customer says → You prescribe</h1>
+    <div style="display:flex; flex-direction:column; gap:12px;">
+      <div class="signal-row">
+        <div style="flex:2; font-size:14px; color:#A9AEBE;">"We spend hours manually tagging / categorizing incoming requests"</div>
+        <div style="font-size:18px;">→</div>
+        <div style="flex:1;"><span class="status-pill" style="background:rgba(97,97,255,0.15); color:#6161FF;">AI Blocks</span> <span style="font-size:13px; color:#A9AEBE;">Categorize + Extract</span></div>
+      </div>
+      <div class="signal-row">
+        <div style="flex:2; font-size:14px; color:#A9AEBE;">"Our process has 5+ handoffs and things fall through the cracks"</div>
+        <div style="font-size:18px;">→</div>
+        <div style="flex:1;"><span class="status-pill" style="background:rgba(0,202,114,0.15); color:#00CA72;">AI Workflows</span> <span style="font-size:13px; color:#A9AEBE;">Multi-step pipeline</span></div>
+      </div>
+      <div class="signal-row">
+        <div style="flex:2; font-size:14px; color:#A9AEBE;">"Action items from meetings never make it into our system"</div>
+        <div style="font-size:18px;">→</div>
+        <div style="flex:1;"><span class="status-pill" style="background:rgba(255,204,0,0.15); color:#FFCC00;">Notetaker</span> <span style="font-size:13px; color:#A9AEBE;">Transcribe + push to boards</span></div>
+      </div>
+      <div class="signal-row">
+        <div style="flex:2; font-size:14px; color:#A9AEBE;">"We need something custom but don't have dev resources"</div>
+        <div style="font-size:18px;">→</div>
+        <div style="flex:1;"><span class="status-pill" style="background:rgba(157,80,221,0.15); color:#9D50DD;">Vibe</span> <span style="font-size:13px; color:#A9AEBE;">Build it live</span></div>
+      </div>
+      <div class="signal-row">
+        <div style="flex:2; font-size:14px; color:#A9AEBE;">"We want AI to actually do the work, not just surface insights"</div>
+        <div style="font-size:18px;">→</div>
+        <div style="flex:1;"><span class="status-pill" style="background:rgba(251,39,93,0.15); color:#FB275D;">Agents</span> <span style="font-size:13px; color:#A9AEBE;">Digital Workers</span></div>
+      </div>
+      <div class="signal-row">
+        <div style="flex:2; font-size:14px; color:#A9AEBE;">"We don't even know where to start with AI"</div>
+        <div style="font-size:18px;">→</div>
+        <div style="flex:1;"><span class="status-pill" style="background:rgba(97,97,255,0.15); color:#6161FF;">AI Board Suggestions</span> <span style="font-size:13px; color:#A9AEBE;">Let monday tell them</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 17: Don't Throw AI at the Wall ===================== -->
+<div class="slide" id="slide-16">
+  <div class="fade-in" style="max-width:850px; width:100%;">
+    <h2 style="font-size:13px; font-weight:600; color:#FFCC00; text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">The SE mindset</h2>
+    <h1 style="font-size:36px; font-weight:700; margin-bottom:16px;">Don't throw AI at the wall</h1>
+    <p style="font-size:16px; color:#A9AEBE; margin-bottom:32px; line-height:1.6;">The worst thing you can do is show every AI feature hoping something sticks. Customers don't want a product tour — they want someone who heard their problem and can solve it.</p>
+    <div style="display:flex; gap:24px; margin-bottom:28px;">
+      <div style="flex:1; text-align:center;">
+        <div style="font-size:48px; margin-bottom:8px;">&#128683;</div>
+        <div style="font-size:16px; font-weight:700; color:#FB275D; margin-bottom:6px;">Feature dump</div>
+        <div style="font-size:13px; color:#A9AEBE; line-height:1.5;">"Let me show you our AI Blocks, and our Workflows, and our Notetaker, and our Agents, and our Vibe..."</div>
+      </div>
+      <div style="font-size:36px; color:#A9AEBE; display:flex; align-items:center;">vs</div>
+      <div style="flex:1; text-align:center;">
+        <div style="font-size:48px; margin-bottom:8px;">&#127919;</div>
+        <div style="font-size:16px; font-weight:700; color:#00CA72; margin-bottom:6px;">Prescribe the fix</div>
+        <div style="font-size:13px; color:#A9AEBE; line-height:1.5;">"You mentioned tickets take 20 min to triage. Let me show you how AI categorizes and routes them in seconds."</div>
+      </div>
+    </div>
+    <div style="padding:20px 28px; background:rgba(97,97,255,0.06); border:1px solid rgba(97,97,255,0.15); border-radius:14px; text-align:center;">
+      <div style="font-size:18px; font-weight:700;">The formula: <span style="color:#6161FF;">Hear the pain</span> → <span style="color:#00CA72;">Match the product</span> → <span style="color:#9D50DD;">Demo just that</span></div>
+      <div style="font-size:13px; color:#A9AEBE; margin-top:6px;">One well-placed AI demo moment beats ten feature drive-bys.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 18: Section — Translating Pain → Vibe ===================== -->
+<div class="slide" id="slide-17">
+  <div class="fade-in" style="text-align:center;">
+    <div style="font-size:13px; font-weight:600; color:#9D50DD; text-transform:uppercase; letter-spacing:3px; margin-bottom:20px;">Part 4</div>
+    <h1 style="font-size:52px; font-weight:800; line-height:1.1;">
+      Translating pain<br>into <span style="color:#9D50DD;">Vibe</span>
+    </h1>
+    <p style="font-size:20px; color:#A9AEBE; margin-top:20px;">From customer problem to custom app in minutes</p>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 19: The Vibe Prompt Formula ===================== -->
+<div class="slide" id="slide-18">
+  <div class="fade-in" style="max-width:900px; width:100%;">
+    <h2 style="font-size:13px; font-weight:600; color:#9D50DD; text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">The framework</h2>
+    <h1 style="font-size:36px; font-weight:700; margin-bottom:28px;">The Vibe prompt formula</h1>
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      <div style="display:flex; align-items:center; gap:16px;">
+        <div style="width:44px; height:44px; border-radius:12px; background:rgba(251,39,93,0.15); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:800; color:#FB275D; flex-shrink:0;">P</div>
+        <div>
+          <div style="font-size:18px; font-weight:700;">Pain</div>
+          <div style="font-size:14px; color:#A9AEBE;">What's broken? Use the customer's exact words.</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:16px;">
+        <div style="width:44px; height:44px; border-radius:12px; background:rgba(97,97,255,0.15); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:800; color:#6161FF; flex-shrink:0;">P</div>
+        <div>
+          <div style="font-size:18px; font-weight:700;">Persona</div>
+          <div style="font-size:14px; color:#A9AEBE;">Who uses this app every day? What's their role?</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:16px;">
+        <div style="width:44px; height:44px; border-radius:12px; background:rgba(0,202,114,0.15); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:800; color:#00CA72; flex-shrink:0;">D</div>
+        <div>
+          <div style="font-size:18px; font-weight:700;">Data</div>
+          <div style="font-size:14px; color:#A9AEBE;">What boards, columns, or external data should it connect to?</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:16px;">
+        <div style="width:44px; height:44px; border-radius:12px; background:rgba(255,204,0,0.15); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:800; color:#FFCC00; flex-shrink:0;">A</div>
+        <div>
+          <div style="font-size:18px; font-weight:700;">Actions</div>
+          <div style="font-size:14px; color:#A9AEBE;">What should users be able to do? Filter, approve, escalate, assign?</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:16px;">
+        <div style="width:44px; height:44px; border-radius:12px; background:rgba(157,80,221,0.15); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:800; color:#9D50DD; flex-shrink:0;">V</div>
+        <div>
+          <div style="font-size:18px; font-weight:700;">Visual</div>
+          <div style="font-size:14px; color:#A9AEBE;">Dashboard? Card layout? Dark mode? How should it look and feel?</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:24px; padding:16px 24px; background:rgba(157,80,221,0.08); border:1px solid rgba(157,80,221,0.2); border-radius:12px; text-align:center;">
+      <div style="font-size:16px; font-weight:600; color:#9D50DD;">P.P.D.A.V. — Pain, Persona, Data, Actions, Visual</div>
+      <div style="font-size:13px; color:#A9AEBE; margin-top:4px;">A Vibe prompt with all five is 10x better than "build me an app."</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 20: Before / After Vibe Prompt ===================== -->
+<div class="slide" id="slide-19">
+  <div class="fade-in" style="max-width:1000px; width:100%;">
+    <h2 style="font-size:13px; font-weight:600; color:#9D50DD; text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">Before & after</h2>
+    <h1 style="font-size:34px; font-weight:700; margin-bottom:28px;">Same request, different prompt</h1>
+    <div style="display:flex; gap:24px;">
+      <div style="flex:1;">
+        <div style="font-size:14px; font-weight:700; color:#FB275D; margin-bottom:12px;">&#10060; Lazy prompt</div>
+        <div style="background:#1F2244; border:1px solid rgba(251,39,93,0.2); border-radius:14px; padding:24px; font-size:14px; color:#A9AEBE; line-height:1.7; font-family:monospace;">
+          "Build me an app for tracking quality issues in our factory"
+        </div>
+        <div style="margin-top:12px; font-size:13px; color:#666;">
+          Result: Generic form + list. No context, no actions, no data connection. Useless in a demo.
+        </div>
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:14px; font-weight:700; color:#00CA72; margin-bottom:12px;">&#9989; PPDAV prompt</div>
+        <div style="background:#1F2244; border:1px solid rgba(0,202,114,0.2); border-radius:14px; padding:24px; font-size:13px; color:#A9AEBE; line-height:1.7; font-family:monospace;">
+          "<strong style="color:#FB275D;">Pain:</strong> Our QC team logs defects on paper, takes 3 days to spot trends.<br>
+          <strong style="color:#6161FF;">Persona:</strong> Floor supervisors who aren't tech-savvy, use iPads.<br>
+          <strong style="color:#00CA72;">Data:</strong> Connect to our Production Tracking board (SKU, line, shift columns).<br>
+          <strong style="color:#FFCC00;">Actions:</strong> Log defect with photo, auto-categorize type, alert manager if critical, weekly trend chart.<br>
+          <strong style="color:#9D50DD;">Visual:</strong> Mobile-first card layout, big buttons, dark mode for factory floor."
+        </div>
+        <div style="margin-top:12px; font-size:13px; color:#00CA72;">
+          Result: A demo-ready app the customer can see themselves using tomorrow.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 21: Transition — Vibe Coding Party ===================== -->
+<div class="slide" id="slide-20">
+  <div class="fade-in" style="text-align:center;">
+    <div style="font-size:13px; font-weight:600; color:#FB275D; text-transform:uppercase; letter-spacing:3px; margin-bottom:20px;">Part 5</div>
+    <h1 style="font-size:56px; font-weight:800; line-height:1.1;">
+      Vibe Coding <span class="gradient-text">Party</span>
+    </h1>
+    <p style="font-size:22px; color:#A9AEBE; margin-top:20px; max-width:600px; margin-left:auto; margin-right:auto;">
+      Pick a client. Read their pain. Build them a Vibe.
+    </p>
+    <div style="margin-top:32px; display:flex; gap:16px; justify-content:center;">
+      <span class="status-pill" style="background:rgba(0,202,114,0.15); color:#00CA72;">20 min to build</span>
+      <span class="status-pill" style="background:rgba(97,97,255,0.15); color:#6161FF;">8 scenarios to choose from</span>
+      <span class="status-pill" style="background:rgba(251,39,93,0.15); color:#FB275D;">Best Vibe wins</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 22: Rules ===================== -->
+<div class="slide" id="slide-21">
+  <div class="fade-in" style="max-width:850px; width:100%;">
+    <h2 style="font-size:13px; font-weight:600; color:#00CA72; text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">How it works</h2>
+    <h1 style="font-size:40px; font-weight:700; margin-bottom:32px;">Vibe Coding Party rules</h1>
+    <div style="display:flex; flex-direction:column; gap:18px;">
+      <div style="display:flex; align-items:start; gap:20px;">
+        <div style="width:48px; height:48px; border-radius:12px; background:rgba(0,202,114,0.15); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800; color:#00CA72; flex-shrink:0;">1</div>
+        <div>
+          <div style="font-size:20px; font-weight:600;">Pick a client scenario</div>
+          <div style="font-size:14px; color:#A9AEBE; margin-top:4px;">8 fake clients across different industries. Choose one that excites you (or scares you).</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:start; gap:20px;">
+        <div style="width:48px; height:48px; border-radius:12px; background:rgba(0,202,114,0.15); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800; color:#00CA72; flex-shrink:0;">2</div>
+        <div>
+          <div style="font-size:20px; font-weight:600;">Use the PPDAV framework</div>
+          <div style="font-size:14px; color:#A9AEBE; margin-top:4px;">Pain, Persona, Data, Actions, Visual. The scenario gives you P and hints at the rest — flesh it out.</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:start; gap:20px;">
+        <div style="width:48px; height:48px; border-radius:12px; background:rgba(0,202,114,0.15); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800; color:#00CA72; flex-shrink:0;">3</div>
+        <div>
+          <div style="font-size:20px; font-weight:600;">Build in monday Vibe</div>
+          <div style="font-size:14px; color:#A9AEBE; margin-top:4px;">Open Vibe, paste your prompt, iterate. You have 20 minutes. Round 1 is a draft — refine it.</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:start; gap:20px;">
+        <div style="width:48px; height:48px; border-radius:12px; background:rgba(97,97,255,0.15); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800; color:#6161FF; flex-shrink:0;">4</div>
+        <div>
+          <div style="font-size:20px; font-weight:600;">Show & Tell</div>
+          <div style="font-size:14px; color:#A9AEBE; margin-top:4px;">Volunteers share their Vibe + the prompt that built it. We judge on: relevance to pain, usability, and "would the client buy this?"</div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:24px;">
+      <span style="font-size:14px; color:#A9AEBE;">Think like an SE: you're building this for a real prospect meeting next week.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 23: All 8 Scenarios (LEAVE UP) ===================== -->
+<div class="slide" id="slide-22">
+  <div class="fade-in" style="max-width:1200px; width:100%; display:flex; gap:20px; align-items:start;">
+
+    <!-- LEFT: Scenarios 1-4 -->
+    <div style="flex:1; display:flex; flex-direction:column; gap:10px;">
+      <h2 style="font-size:12px; font-weight:600; color:#00CA72; text-transform:uppercase; letter-spacing:2px; margin-bottom:4px;">Choose a client</h2>
+
+      <div class="scenario-card" style="border-left:3px solid #FB275D;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:5px;">
+          <span style="font-size:16px;">&#127973;</span>
+          <span style="font-size:14px; font-weight:700; color:#FB275D;">Pinnacle Health Systems</span>
+          <span style="font-size:11px; color:#666; margin-left:auto;">Healthcare</span>
+        </div>
+        <div style="font-size:12px; color:#A9AEBE; line-height:1.5;">Patient referral tracking is a mess of spreadsheets and faxes. Referrals get lost, time-to-appointment is unknown, and nobody can see bottlenecks. Build a referral management app.</div>
+      </div>
+
+      <div class="scenario-card" style="border-left:3px solid #6161FF;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:5px;">
+          <span style="font-size:16px;">&#128176;</span>
+          <span style="font-size:14px; font-weight:700; color:#6161FF;">Crestview Capital Partners</span>
+          <span style="font-size:11px; color:#666; margin-left:auto;">Private Equity</span>
+        </div>
+        <div style="font-size:12px; color:#A9AEBE; line-height:1.5;">Each partner tracks deals differently — some in Excel, some in their head. No unified pipeline visibility. LPs keep asking for reports nobody can produce. Build a deal flow tracker.</div>
+      </div>
+
+      <div class="scenario-card" style="border-left:3px solid #00CA72;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:5px;">
+          <span style="font-size:16px;">&#9881;&#65039;</span>
+          <span style="font-size:14px; font-weight:700; color:#00CA72;">Atlas Industrial</span>
+          <span style="font-size:11px; color:#666; margin-left:auto;">Manufacturing</span>
+        </div>
+        <div style="font-size:12px; color:#A9AEBE; line-height:1.5;">Quality defects are logged on paper clipboards. By the time trends are spotted, thousands of units have shipped. Need a defect tracker with photo capture and trend dashboards.</div>
+      </div>
+
+      <div class="scenario-card" style="border-left:3px solid #FFCC00;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:5px;">
+          <span style="font-size:16px;">&#128722;</span>
+          <span style="font-size:14px; font-weight:700; color:#FFCC00;">Bloom & Birch</span>
+          <span style="font-size:11px; color:#666; margin-left:auto;">Retail / E-commerce</span>
+        </div>
+        <div style="font-size:12px; color:#A9AEBE; line-height:1.5;">Product launches involve merch, marketing, and supply chain — but nobody has one view. Launch dates slip, inventory arrives late, campaigns go live before products are ready. Build a launch command center.</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Scenarios 5-8 + PPDAV cheat sheet -->
+    <div style="flex:1; display:flex; flex-direction:column; gap:10px;">
+
+      <div class="scenario-card" style="border-left:3px solid #9D50DD;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:5px;">
+          <span style="font-size:16px;">&#127959;&#65039;</span>
+          <span style="font-size:14px; font-weight:700; color:#9D50DD;">Meridian Builders</span>
+          <span style="font-size:11px; color:#666; margin-left:auto;">Construction</span>
+        </div>
+        <div style="font-size:12px; color:#A9AEBE; line-height:1.5;">40+ active job sites. Permits and inspections tracked in a shared Google Sheet that's always outdated. Subcontractors never know what's next. Build a permit & inspection tracker.</div>
+      </div>
+
+      <div class="scenario-card" style="border-left:3px solid #579BFC;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:5px;">
+          <span style="font-size:16px;">&#127891;</span>
+          <span style="font-size:14px; font-weight:700; color:#579BFC;">BrightPath Academy</span>
+          <span style="font-size:11px; color:#666; margin-left:auto;">Education</span>
+        </div>
+        <div style="font-size:12px; color:#A9AEBE; line-height:1.5;">Student success data is split across 5 systems. Counselors can't see attendance + grades + interventions in one place. At-risk students slip through the cracks. Build a student success dashboard.</div>
+      </div>
+
+      <div class="scenario-card" style="border-left:3px solid #FF5AC4;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:5px;">
+          <span style="font-size:16px;">&#128666;</span>
+          <span style="font-size:14px; font-weight:700; color:#FF5AC4;">Velocity Freight</span>
+          <span style="font-size:11px; color:#666; margin-left:auto;">Logistics</span>
+        </div>
+        <div style="font-size:12px; color:#A9AEBE; line-height:1.5;">Shippers have no way to compare carriers. Cost, on-time %, damage rates — all in different systems. Carrier negotiations are based on gut feel. Build a carrier scorecard app.</div>
+      </div>
+
+      <div class="scenario-card" style="border-left:3px solid #FDAB3D;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:5px;">
+          <span style="font-size:16px;">&#127912;</span>
+          <span style="font-size:14px; font-weight:700; color:#FDAB3D;">Signal Creative</span>
+          <span style="font-size:11px; color:#666; margin-left:auto;">Marketing Agency</span>
+        </div>
+        <div style="font-size:12px; color:#A9AEBE; line-height:1.5;">30+ client campaigns running simultaneously. Deliverables, approvals, and deadlines are scattered across Slack, email, and spreadsheets. Build a campaign command center.</div>
+      </div>
+
+      <!-- PPDAV cheat sheet -->
+      <div style="background:rgba(157,80,221,0.08); border:1px solid rgba(157,80,221,0.2); border-radius:12px; padding:14px 18px; margin-top:2px;">
+        <div style="font-size:12px; font-weight:700; color:#9D50DD; margin-bottom:8px;">PPDAV Cheat Sheet</div>
+        <div style="font-size:11px; color:#A9AEBE; line-height:1.6;">
+          <strong style="color:#FB275D;">P</strong>ain — what's broken?<br>
+          <strong style="color:#6161FF;">P</strong>ersona — who uses it daily?<br>
+          <strong style="color:#00CA72;">D</strong>ata — what boards/columns to connect?<br>
+          <strong style="color:#FFCC00;">A</strong>ctions — what can users do?<br>
+          <strong style="color:#9D50DD;">V</strong>isual — how should it look?
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== Navigation ===================== -->
+<div class="slide-number" id="slideNumber">1 / 23</div>
+
+<div class="nav-dots" id="navDots"></div>
+
+<div class="nav-arrows">
+  <button class="nav-btn" onclick="changeSlide(-1)">&#8592;</button>
+  <button class="nav-btn" onclick="changeSlide(1)">&#8594;</button>
+</div>
+
+<script>
+const sectionLabels = [
+  "", // Title
+  "Agenda",
+  "Platform Differentiators",
+  "Platform Differentiators",
+  "Platform Differentiators",
+  "Product Tour",
+  "Product Tour — AI Blocks",
+  "Product Tour — AI Blocks",
+  "Product Tour — AI Workflows",
+  "Product Tour — Sidekick",
+  "Product Tour — Notetaker",
+  "Product Tour — Agents",
+  "Product Tour — Vibe",
+  "Product Tour — Vibe",
+  "Product Tour — Vibe",
+  "The SE Lens",
+  "The SE Lens",
+  "The SE Lens",
+  "Translating Pain → Vibe",
+  "Translating Pain → Vibe",
+  "Translating Pain → Vibe",
+  "Vibe Coding Party",
+  "Vibe Coding Party",
+  "Vibe Coding Party — SCENARIOS"
+];
+
+let current = 0;
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+
+// Build dots
+const dotsContainer = document.getElementById('navDots');
+for (let i = 0; i < total; i++) {
+  const dot = document.createElement('div');
+  dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+  dot.onclick = () => goToSlide(i);
+  dotsContainer.appendChild(dot);
+}
+
+function goToSlide(n) {
+  slides[current].classList.remove('active');
+  document.querySelectorAll('.nav-dot')[current].classList.remove('active');
+  current = n;
+  slides[current].classList.add('active');
+  document.querySelectorAll('.nav-dot')[current].classList.add('active');
+  document.getElementById('slideNumber').textContent = (current + 1) + ' / ' + total;
+  document.getElementById('sectionLabel').textContent = sectionLabels[current] || '';
+}
+
+function changeSlide(dir) {
+  let next = current + dir;
+  if (next < 0) next = 0;
+  if (next >= total) next = total - 1;
+  goToSlide(next);
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); changeSlide(1); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); changeSlide(-1); }
+});
+
+document.addEventListener('click', (e) => {
+  if (e.target.closest('.nav-dots') || e.target.closest('.nav-arrows') || e.target.closest('.nav-btn')) return;
+  const x = e.clientX;
+  if (x > window.innerWidth * 0.5) changeSlide(1);
+  else changeSlide(-1);
+});
+</script>
+
+</body>
+</html>
